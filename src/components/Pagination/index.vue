@@ -23,18 +23,18 @@ export default {
       required: true,
       type: Number
     },
-    page: {
+    start: {
       type: Number,
       default: 1
     },
-    limit: {
+    size: {
       type: Number,
-      default: 20
+      default: 15
     },
     pageSizes: {
       type: Array,
       default() {
-        return [10, 20, 30, 50]
+        return [15, 30, 50, 100]
       }
     },
     layout: {
@@ -57,30 +57,30 @@ export default {
   computed: {
     currentPage: {
       get() {
-        return this.page
+        return this.start
       },
       set(val) {
-        this.$emit('update:page', val)
+        this.$emit('update:start', val)
       }
     },
     pageSize: {
       get() {
-        return this.limit
+        return this.size
       },
       set(val) {
-        this.$emit('update:limit', val)
+        this.$emit('update:size', val)
       }
     }
   },
   methods: {
     handleSizeChange(val) {
-      this.$emit('pagination', { page: this.currentPage, limit: val })
+      this.$emit('pagination', { start: this.currentPage, size: val })
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
     },
     handleCurrentChange(val) {
-      this.$emit('pagination', { page: val, limit: this.pageSize })
+      this.$emit('pagination', { start: val, size: this.pageSize })
       if (this.autoScroll) {
         scrollTo(0, 800)
       }

@@ -19,6 +19,20 @@ module.exports = {
         }
       }
     },
+    prod: {
+      // Paths
+      assetsSubDirectory: 'static',
+      assetsPublicPath: '/',
+      proxyTable: {
+        '/api': {
+          target: 'http://118.24.82.219:8080',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': '/api'
+          }
+        }
+      }
+    },
 
     // Various Dev Server settings
 
