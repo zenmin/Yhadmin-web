@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.name" placeholder="名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.cid" placeholder="分类" clearable style="width: 90px" class="filter-item">
+      <el-select v-model="listQuery.goodsId" placeholder="关联商品" clearable style="width: 120px" class="filter-item">
         <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
       <el-select v-model="listQuery.status" placeholder="状态" clearable style="width: 90px" class="filter-item">
@@ -21,19 +21,14 @@
       fit
       highlight-current-row
       width="100%" >
+      <el-table-column label="卡密编码" align="center">
+        <template slot-scope="scope">
+          <el-tag>{{ scope.row.cardNo }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="商品名称" align="center">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.name }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="单价" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="分类名称" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cname }}</span>
+          <span>{{ scope.row.goodsName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="添加时间" align="center">
@@ -41,41 +36,20 @@
           <span>{{ scope.row.createDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品描述" align="center">
+      <el-table-column label="添加人" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.goodsDesc }}</span>
+          <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品状态" align="center">
+      <el-table-column label="卡密状态" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status == 1"><span style="color:#67C23A;">启用</span></el-tag>
-          <el-tag v-if="scope.row.status == 2"><span style="color:#F67E7E;">禁用</span> </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="需要密码提取" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.needPwd == false"><span style="color:#F67E7E;"> 否</span></el-tag>
-          <el-tag v-if="scope.row.needPwd == true"> <span style="color:#67C23A;">是</span></el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="提取密码" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.pullPwd }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品图片" align="center">
-        <template slot-scope="scope">
-          <a :href=" scope.row.img " target="_blank" style="color: #1e6abc">{{ scope.row.img }}</a>
-        </template>
-      </el-table-column>
-      <el-table-column label="库存卡密" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kmCount }}</span>
+          <el-tag v-if="scope.row.status == 0"><span style="color:#67C23A;">未使用</span></el-tag>
+          <el-tag v-if="scope.row.status == 1"><span style="color:#F67E7E;">已使用</span> </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button type="success" size="mini" @click="handleUpdate(scope.row)">详情</el-button>
           <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="deleteCate(scope.$index, scope.row.id,list)">删除</el-button>
         </template>
       </el-table-column>
@@ -85,43 +59,31 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="商品分类" prop="cid">
-          <el-select v-model="temp.cid" placeholder="请选择" clearable style="width: 90px" class="filter-item">
-            <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
+        <el-form-item label="卡密编号">
+          <span>{{ tempMsg.cardNo }}</span>
         </el-form-item>
-        <el-form-item label="商品名称" prop="name">
-          <el-input v-model="temp.name"/>
+        <el-form-item label="添加时间">
+          <span>{{ tempMsg.createDate }}</span>
         </el-form-item>
-        <el-form-item label="添加时间" >
-          <el-date-picker v-model="temp.createDate" type="datetime" placeholder="" disabled="disabled"/>
+        <el-form-item label="添加人">
+          <span>{{ tempMsg.createUser }}</span>
         </el-form-item>
-        <el-form-item label="单价" prop="price">
-          <el-input-number v-model="temp.price"/>
+        <el-form-item label="关联商品名称">
+          <span>{{ tempMsg.goodsName }}</span>
         </el-form-item>
-        <el-form-item label="状态" prop="status" >
-          <el-select v-model="temp.status" class="filter-item" >
-            <el-option v-for="item in statusOptions" :key="item.value" :label="item.name" :value="item.value"/>
-          </el-select>
+        <el-form-item label="卡密状态">
+          <span v-if="tempMsg.status == 1">已使用</span>
+          <span v-if="tempMsg.status == 0">未使用</span>
         </el-form-item>
-        <el-form-item label="需要密码提取" prop="needPwd" >
-          <el-select v-model="temp.needPwd" class="filter-item" @change="checkOpts">
-            <el-option v-for="item in needPwdOpt" :key="item.value" :label="item.name" :value="item.value"/>
-          </el-select>
+        <el-form-item label="提取时间">
+          <span>{{ tempMsg.useDate }}</span>
         </el-form-item>
-        <el-form-item label="提取密码" prop="pullPwd">
-          <el-input v-model="temp.pullPwd" :disabled="isDisabled"/>
-        </el-form-item>
-        <el-form-item label="商品图片" prop="img">
-          <el-input v-model="temp.img"/>
-        </el-form-item>
-        <el-form-item label="商品描述" prop="goodsDesc">
-          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.goodsDesc" type="textarea" />
+        <el-form-item label="提取人联系方式">
+          <span>{{ tempMsg.useUser }}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+        <el-button @click="dialogFormVisible = false">关闭</el-button>
       </div>
     </el-dialog>
 
@@ -129,8 +91,8 @@
 </template>
 
 <script>
-import { fetchList, getByCondition, save, deleteById } from '@/api/goods'
-import categoryApi from '@/api/category'
+import { fetchList, getByCondition, save, deleteById } from '@/api/cardpwd'
+import { getAll } from '@/api/goods'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // 分页组件 Secondary package based on el-pagination
@@ -155,22 +117,22 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        start: 0,
-        size: 20,
-        name: undefined,
+        start: 1,
+        size: 15,
+        cardNo: undefined,
         status: undefined,
-        cid: undefined
+        goodsId: undefined
       },
       isDisabled: true,
       importanceOptions: [1, 2],
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: [
         {
-          name: '启用',
+          name: '已使用',
           value: 1
         }, {
-          name: '禁用',
-          value: 2
+          name: '未使用',
+          value: 0
         }
       ],
       statusOptionsAll: [
@@ -179,11 +141,11 @@ export default {
           value: null
         },
         {
-          name: '启用',
+          name: '已使用',
           value: 1
         }, {
-          name: '禁用',
-          value: 2
+          name: '未使用',
+          value: 0
         }
       ],
       needPwdOpt: [
@@ -207,6 +169,17 @@ export default {
         img: '',
         needPwd: false,
         pullPwd: ''
+      },
+      tempMsg: {
+        cardNo: '',
+        createDate: '',
+        createUser: '',
+        createUserId: '',
+        goodsId: '',
+        goodsName: '',
+        status: '',
+        useDate: null,
+        useUser: null
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -234,7 +207,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         const c = response.data.data.content
         this.list = c
-        this.total = c.length
+        this.total = response.data.data.totalElements
         // Just to simulate the time of the request
         this.listLoading = false
       })
@@ -250,7 +223,7 @@ export default {
       getByCondition(this.listQuery).then(response => {
         const c = response.data.data.content
         this.list = c
-        this.total = c.length
+        this.total = response.data.data.totalElements
         this.listLoading = false
       })
     },
@@ -273,6 +246,7 @@ export default {
                 duration: 4000
               })
               list.splice(index, 1)
+              this.total--
             } else {
               this.$notify({
                 title: '失败',
@@ -285,8 +259,8 @@ export default {
         }).catch(reason => {})
     },
     getCategories() {
-      return categoryApi.getCategories().then((r) => {
-        return r.data.data
+      return getAll(null).then((r) => {
+        return r.data.data.content
       })
     },
     checkOpts(data) {
@@ -338,7 +312,12 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      const json = {}
+      json.id = row.id
+      getByCondition(json).then(r => {
+        r.data.content = this.tempMsg
+      })
+      this.tempMsg = Object.assign({}, row) // copy obj
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {

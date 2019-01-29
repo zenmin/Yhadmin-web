@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function getAll(query) {
+  return request({
+    url: '/api/goods/getAll',
+    method: 'get',
+    params: query
+  })
+}
+
 export function getByCondition(query) {
   return request({
     url: '/api/goods/getByCondition',

@@ -120,8 +120,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
       </div>
     </el-dialog>
 
@@ -155,13 +155,13 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        start: 0,
-        size: 20,
+        start: 1,
+        size: 15,
         name: undefined,
         status: undefined,
         cid: undefined
       },
-      isDisabled: false,
+      isDisabled: true,
       importanceOptions: [1, 2],
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: [
@@ -211,8 +211,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '更新分类',
-        create: '新建分类'
+        update: '更新商品',
+        create: '添加商品'
       },
       pvData: [],
       rules: {
@@ -234,7 +234,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         const c = response.data.data.content
         this.list = c
-        this.total = c.length
+        this.total = response.data.data.totalElements
         // Just to simulate the time of the request
         this.listLoading = false
       })
@@ -250,7 +250,7 @@ export default {
       getByCondition(this.listQuery).then(response => {
         const c = response.data.data.content
         this.list = c
-        this.total = c.length
+        this.total = response.data.data.totalElements
         this.listLoading = false
       })
     },
@@ -291,11 +291,11 @@ export default {
     },
     checkOpts(data) {
       if (data) {
-        this.isDisabled = true
-        this.temp.pullPwd = '无需提取密码'
+        this.isDisabled = false
+        this.temp.pullPwd = ''
       } else {
         this.temp.pullPwd = ''
-        this.isDisabled = false
+        this.isDisabled = true
       }
     },
     resetTemp() {
@@ -372,13 +372,13 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['分类名称', '分类描述', '创建时间', '排序', '状态']
-        const filterVal = ['name', 'categoryDesc', 'createDate', 'sort', 'status']
+        const tHeader = ['商品名称', '单价', '分类名称', '添加时间', '商品描述', '商品状态', '需要密码提取', '提取密码', '商品图片', '库存卡密']
+        const filterVal = ['name', 'price', 'cname', 'createDate', 'goodsDesc', 'status', 'needPwd', 'pullPwd', 'img', 'kmCount']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '分类列表'
+          filename: '商品列表'
         })
         this.downloadLoading = false
       })
