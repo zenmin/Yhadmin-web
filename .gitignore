@@ -17,5 +17,13 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
-
+node_modules
 package-lock.json
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen

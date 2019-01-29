@@ -2,8 +2,16 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: '/api/category/getAll',
     method: 'get',
+    params: query
+  })
+}
+
+export function getByCondition(query) {
+  return request({
+    url: '/api/category/getByCondition',
+    method: 'post',
     params: query
   })
 }

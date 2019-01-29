@@ -72,33 +72,33 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+        meta: { title: '首页', icon: 'dashboard', noCache: true }
       }
     ]
   },
   {
-    path: '/documentation',
+    path: '/category',
     component: Layout,
-    redirect: '/documentation/index',
+    redirect: '/category/#',
     children: [
       {
         path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'documentation', icon: 'documentation', noCache: true }
+        component: () => import('@/views/yhadmin/category'),
+        name: 'Category',
+        meta: { title: '分类管理', icon: 'documentation', noCache: true }
       }
     ]
   },
   {
-    path: '/guide',
+    path: '/goods',
     component: Layout,
-    redirect: '/guide/index',
+    redirect: '/goods/#',
     children: [
       {
         path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true }
+        component: () => import('@/views/yhadmin/goods'),
+        name: 'Goods',
+        meta: { title: '商品管理', icon: 'guide', noCache: true }
       }
     ]
   }
@@ -359,7 +359,7 @@ export const asyncRouterMap = [
     component: Layout,
     children: [
       {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
+        path: '#',
         meta: { title: 'externalLink', icon: 'link' }
       }
     ]
