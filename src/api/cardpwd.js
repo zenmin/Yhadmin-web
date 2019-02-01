@@ -24,18 +24,17 @@ export function save(data) {
   })
 }
 
-export function saveBatch(data) {
-  return request({
-    url: '/api/card/saveBatch',
-    method: 'post',
-    data: data
-  })
-}
-
 export function deleteById(id) {
   return request({
     url: '/api/card/delete',
     method: 'post',
     data: id
+  })
+}
+export function deleteBatch(type) {
+  return request({
+    url: '/api/card/deleteBatch',
+    method: 'post',
+    data: type
   })
 }

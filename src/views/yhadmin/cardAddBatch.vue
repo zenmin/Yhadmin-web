@@ -2,20 +2,20 @@
   <div class="app-container">
     <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px">
       <el-form-item label="分类" prop="cid">
-        <el-select v-model="listQuery.cid" placeholder="选择分类" clearable style="width: 200px" class="filter-item" @change="checkCate" >
+        <el-select v-model="temp.cid" placeholder="选择分类" clearable style="width: 200px" class="filter-item" @change="checkCate" >
           <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="商品" prop="goodsId">
-        <el-select v-model="listQuery.goodsId" placeholder="选择商品" clearable style="width: 200px" class="filter-item" @change="checkGoods">
+        <el-select v-model="temp.goodsId" placeholder="选择商品" clearable style="width: 200px" class="filter-item" @change="checkGoods">
           <el-option v-for="item in goodsAll " :key="item.id" :label="item.name" :value="item.id"/>
         </el-select>
       </el-form-item>
-      <el-form-item label="卡密" prop="goodsDesc">
+      <el-form-item label="卡密" prop="cardNo">
         <el-tag>当前商品库存卡密：{{ allKms }}</el-tag>
         <el-tag style="color: #ffa50f">注意：卡密一行一张卡，格式自定义即可！例如：卡号-卡密 、卡号 卡密、卡号 等</el-tag>
         <br>
-        <el-input :rows="20" v-model="temp.goodsDesc" :disabled="isDisabled" type="textarea" style="width: 50%;min-height: 400px;" placeholder="输入卡密" />
+        <el-input :rows="20" v-model="temp.cardNo" :disabled="isDisabled" type="textarea" style="width: 50%;min-height: 400px;" placeholder="输入卡密" />
       </el-form-item>
       <el-form-item label="" prop="">
         <el-button @click="cancelForm">清空</el-button>
@@ -26,21 +26,13 @@
 </template>
 
 <script>
-// import { saveBatch } from '@/api/cardpwd'
+import { save } from '@/api/cardpwd'
 import { getByCondition } from '@/api/goods'
 import categoryApi from '@/api/category'
 import { parseTime } from '@/utils'
 
 export default {
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
   },
   data() {
     return {
@@ -48,22 +40,20 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      listQuery: {
-        start: 0,
-        size: 20,
-        cardNo: undefined,
-        status: undefined,
-        goodsId: undefined
-      },
+      cardNo: undefined,
+      status: undefined,
+      goodsId: undefined,
       categoryAll: [],
       goodsAll: [],
       temp: {},
       isDisabled: true,
       rules: {
-        cardNo: [{ required: true, message: '名称不能为空哦！', trigger: 'blur' }],
-        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }]
+        cardNo: [{ required: true, message: '卡密不能为空哦！', trigger: 'blur' }],
+        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }],
+        goodsId: [{ required: true, message: '必须选一个商品哦！', trigger: 'blur' }]
       },
-      allKms: 0
+      allKms: 0,
+      cid: ''
     }
   },
   created() {
@@ -102,15 +92,26 @@ export default {
       }
     },
     cancelForm() {
+      this.temp = {}
     },
     saveCardPwd() {
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          save(this.temp).then(r => {
+            if (r.data.data) {
+              this.$notify({
+                title: '成功',
+                message: '添加卡密成功',
+                type: 'success',
+                duration: 4000
+              })
+              this.temp.cardNo = ''
+              getByCondition({ id: this.temp.goodsId }).then(r => {
+                this.allKms = r.data.data.content[0].kmCount
+              })
+            }
+          })
+        }
       })
     },
     formatJson(filterVal, jsonData) {
