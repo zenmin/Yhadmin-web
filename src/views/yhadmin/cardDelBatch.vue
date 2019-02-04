@@ -20,57 +20,39 @@
       fit
       highlight-current-row
       width="100%" >
-      <el-table-column label="商品名称" align="center">
-        <template slot-scope="scope">
-          <el-tag>{{ scope.row.name }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="单价" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="分类名称" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cname }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="添加时间" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createDate }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品描述" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.goodsDesc }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品状态" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status == 1"><span style="color:#67C23A;">启用</span></el-tag>
-          <el-tag v-if="scope.row.status == 2"><span style="color:#F67E7E;">禁用</span> </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="需要密码提取" align="center">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.needPwd == false"><span style="color:#F67E7E;"> 否</span></el-tag>
-          <el-tag v-if="scope.row.needPwd == true"> <span style="color:#67C23A;">是</span></el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="提取密码" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.pullPwd }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品图片" align="center">
-        <template slot-scope="scope">
-          <a :href=" scope.row.img " target="_blank" style="color: #1e6abc">{{ scope.row.img }}</a>
-        </template>
-      </el-table-column>
-      <el-table-column label="库存卡密" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.kmCount }}</span>
-        </template>
+      <el-table-column label="批量删除日志" align="center">
+        <el-table-column label="操作名称" align="center">
+          <template slot-scope="scope">
+            <el-tag>{{ scope.row.optDesc }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="删除方式" align="center">
+          <template slot-scope="scope">
+            <span v-if="scope.row.optParams == '[0]'">删除全部</span>
+            <span v-if="scope.row.optParams == '[1]'">已使用的卡密</span>
+            <span v-if="scope.row.optParams == '[2]'">未使用的卡密</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="删除时间" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.createDate }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作人" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.optUser }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作人ID" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.optUserId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作IP" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.optIp }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
     </el-table>
 
@@ -80,7 +62,7 @@
 </template>
 
 <script>
-import { deleteBatch, fetchList } from '@/api/cardpwd'
+import { getCardpwd } from '@/api/logs'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // 分页组件 Secondary package based on el-pagination
@@ -106,8 +88,7 @@ export default {
       listLoading: true,
       listQuery: {
         start: 0,
-        size: 15,
-        name: undefined
+        size: 15
       },
       temp: {},
       deltype: undefined,
@@ -135,7 +116,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      getCardpwd(this.listQuery).then(response => {
         const c = response.data.data.content
         this.list = c
         this.total = c.length

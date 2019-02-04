@@ -124,7 +124,111 @@ export const constantRouterMap = [
       }
 
     ]
-  }
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/#',
+    meta: { title: '订单管理', icon: 'money', noCache: true },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/cardpwd'),
+        name: 'roderList',
+        meta: { title: '订单列表', icon: 'list', noCache: true }
+      },
+      {
+        path: 'cardAddBatch',
+        component: () => import('@/views/yhadmin/cardAddBatch'),
+        name: 'roderAlia',
+        meta: { title: '订单分析', icon: 'chart', noCache: true }
+      }
+
+    ]
+  },
+  {
+    path: '/config',
+    component: Layout,
+    redirect: '/config/#',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/webconfig'),
+        name: 'webConfig',
+        meta: { title: '平台基本信息配置', icon: 'example', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/interfaceConfig',
+    component: Layout,
+    redirect: '/config/#',
+    meta: { title: '系统全局配置', icon: 'clipboard', noCache: true },
+    children: [
+      {
+        path: 'phoneMsgConfig',
+        component: () => import('@/views/yhadmin/phoneMsgConfig'),
+        name: 'phoneMsgConfig',
+        meta: { title: '短信接口', icon: 'message', noCache: true }
+      },{
+        path: 'mainConfig',
+        component: () => import('@/views/yhadmin/mainConfig'),
+        name: 'mainConfig',
+        meta: { title: '邮件发送', icon: 'email', noCache: true }
+      },
+      {
+        path: 'payConfig',
+        component: () => import('@/views/yhadmin/payConfig'),
+        name: 'payConfig',
+        meta: { title: '支付接口', icon: 'shopping', noCache: true }
+      },
+      {
+        path: 'paySwitchConfig',
+        component: () => import('@/views/yhadmin/paySwitchConfig'),
+        name: 'paySwitchConfig',
+        meta: { title: '支付接口开关', icon: 'wechat', noCache: true }
+      },
+      {
+        path: 'indexStyle',
+        component: () => import('@/views/yhadmin/indexStyle'),
+        name: 'indexStyle',
+        meta: { title: '首页风格', icon: 'component', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/version',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/version'),
+        name: 'Version',
+        meta: { title: '程序信息', icon: 'star', noCache: false }
+      }
+    ]
+  },
+  {
+    path: '/logs',
+    component: Layout,
+    redirect: '/logs/#',
+    meta: { title: '平台全局日志', icon: 'money', noCache: true },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/optlogs'),
+        name: 'Optlogs',
+        meta: { title: '操作日志', icon: 'people', noCache: true }
+      },
+      {
+        path: 'cardAddBatch',
+        component: () => import('@/views/yhadmin/cardAddBatch'),
+        name: 'roderAlia',
+        meta: { title: '请求日志', icon: 'chart', noCache: true }
+      }
+
+    ]
+  },
 ]
 
 export default new Router({
