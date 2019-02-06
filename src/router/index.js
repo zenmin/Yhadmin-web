@@ -221,9 +221,9 @@ export const constantRouterMap = [
         meta: { title: '操作日志', icon: 'people', noCache: true }
       },
       {
-        path: 'cardAddBatch',
-        component: () => import('@/views/yhadmin/cardAddBatch'),
-        name: 'roderAlia',
+        path: 'accesslog',
+        component: () => import('@/views/yhadmin/accesslogs'),
+        name: 'Accesslogs',
         meta: { title: '请求日志', icon: 'chart', noCache: true }
       }
 

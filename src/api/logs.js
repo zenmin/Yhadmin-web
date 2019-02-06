@@ -16,6 +16,22 @@ export function getByCondition(query) {
   })
 }
 
+export function accessList(query) {
+  return request({
+    url: '/api/log/getAccessLog',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getAccessLogCondition(query) {
+  return request({
+    url: '/api/log/getAccessLogCondition',
+    method: 'post',
+    data: query
+  })
+}
+
 export function getCardpwd(data) {
   return request({
     url: '/api/log/get_del_cardpwd',
