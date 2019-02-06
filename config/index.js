@@ -17,6 +17,13 @@ module.exports = {
         pathRewrite: {
           '^/api': '/api'
         }
+      },
+      '/img': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/img': '/img'
+        }
       }
     },
     prod: {
@@ -25,13 +32,20 @@ module.exports = {
       assetsPublicPath: '/',
       proxyTable: {
         '/api': {
-          target: 'http://118.24.82.219:8080',
+          target: 'http://localhost:8080',
           changeOrigin: true,
           pathRewrite: {
             '^/api': '/api'
           }
+        },
+        '/img': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/img': '/img'
+          }
         }
-      }
+      },
     },
 
     // Various Dev Server settings

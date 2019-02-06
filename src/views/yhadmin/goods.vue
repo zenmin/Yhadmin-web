@@ -26,7 +26,7 @@
           <el-tag>{{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="单价" align="center">
+      <el-table-column label="单价/元" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.price }}</span>
         </template>
@@ -65,7 +65,8 @@
       </el-table-column>
       <el-table-column label="商品图片" align="center">
         <template slot-scope="scope">
-          <a :href=" scope.row.img " target="_blank" style="color: #1e6abc">{{ scope.row.img }}</a>
+          <a v-if="scope.row.img.indexOf(',') == -1" :href=" scope.row.img " target="_blank" style="color: #1e6abc">{{ scope.row.img }}</a>
+          <a v-if="scope.row.img.indexOf(',') != -1" v-for="image in scope.row.img.split(',')" :href=" image " target="_blank" style="color: #1e6abc">{{ image }}</a>
         </template>
       </el-table-column>
       <el-table-column label="库存卡密" align="center">
@@ -113,7 +114,7 @@
           <el-input v-model="temp.pullPwd" :disabled="isDisabled"/>
         </el-form-item>
         <el-form-item label="商品图片" prop="img">
-          <el-input v-model="temp.img"/>
+          <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" :btnText="showText"/>
         </el-form-item>
         <el-form-item label="商品描述" prop="goodsDesc">
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.goodsDesc" type="textarea" />
@@ -134,10 +135,11 @@ import categoryApi from '@/api/category'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // 分页组件 Secondary package based on el-pagination
+import editorImage from '@/components/Tinymce/components/editorImage'
 
 export default {
   directives: { waves },
-  components: { Pagination },
+  components: { Pagination, editorImage},
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -197,6 +199,7 @@ export default {
       ],
       categoryAll: [],
       showReviewer: false,
+      showText: '上传图片',
       temp: {
         id: undefined,
         name: '',
@@ -312,6 +315,7 @@ export default {
       }
     },
     handleCreate() {
+      this.showText = '上传图片'
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -338,6 +342,7 @@ export default {
       })
     },
     handleUpdate(row) {
+      this.showText = '查看图片'
       this.temp = Object.assign({}, row) // copy obj
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -382,6 +387,15 @@ export default {
         })
         this.downloadLoading = false
       })
+    },
+    imageSuccessCBK(data) {
+      let urls = '';
+      for( var i in data){
+        console.log(data[i])
+        urls +=data[i].url + ',';
+      }
+      urls = urls.substring(0,urls.length - 1)
+      this.temp.img = urls
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
