@@ -192,13 +192,13 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['商品名称', '单价', '分类名称', '添加时间', '商品描述', '商品状态', '需要密码提取', '提取密码', '商品图片', '库存卡密']
-        const filterVal = ['name', 'price', 'cname', 'createDate', 'goodsDesc', 'status', 'needPwd', 'pullPwd', 'img', 'kmCount']
+        const tHeader = ['操作模块', '操作描述', '操作人IP', '操作时间', '操作人', '操作人ID', '请求参数']
+        const filterVal = ['optName', 'optDesc', 'optIp', 'createDate', 'optUser', 'optUserId', 'optParams']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '商品列表'
+          filename: '操作日志'
         })
         this.downloadLoading = false
       })

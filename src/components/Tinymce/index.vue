@@ -40,7 +40,7 @@ export default {
     height: {
       type: Number,
       required: false,
-      default: 360
+      default: 200
     }
   },
   data() {
@@ -102,7 +102,7 @@ export default {
         code_dialog_width: 1000,
         advlist_bullet_styles: 'square',
         advlist_number_styles: 'default',
-        imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io'],
+        imagetools_cors_hosts: ['', ''],
         default_link_target: '_blank',
         link_title: false,
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin

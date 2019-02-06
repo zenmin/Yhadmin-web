@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 50%">
+    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 60%">
       <el-form-item label="网站主标题" prop="mainTitle">
          <el-input v-model="temp.mainTitle"></el-input>
       </el-form-item>
@@ -11,10 +11,10 @@
         <el-input v-model="temp.titleDesc"></el-input>
       </el-form-item>
       <el-form-item label="主页公告" prop="mainNotice">
-        <el-input v-model="temp.mainNotice"></el-input>
+        <tinymce v-model="temp.mainNotice" ></tinymce>
       </el-form-item>
       <el-form-item label="查订单页面公告" prop="subNotice">
-        <el-input v-model="temp.subNotice"></el-input>
+        <tinymce v-model="temp.subNotice" ></tinymce>
       </el-form-item>
       <el-form-item label="底部版权" prop="copyRight">
         <el-input v-model="temp.copyRight"></el-input>
@@ -35,7 +35,7 @@
       </el-form-item>
       <el-form-item label="" prop="">
         <el-button @click="cancelForm">清空</el-button>
-        <el-button type="primary" @click="saveCardPwd">保存配置</el-button>
+        <el-button type="primary" @click="save">保存配置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -44,11 +44,13 @@
 <script>
 import { save } from '@/api/cardpwd'
 import { getByCondition } from '@/api/goods'
-import categoryApi from '@/api/category'
 import { parseTime } from '@/utils'
-
+import tinymce from '@/components/Tinymce'
 export default {
   filters: {
+  },
+  components: {
+    tinymce: tinymce
   },
   data() {
     return {
@@ -91,25 +93,14 @@ export default {
   },
   methods: {
     cancelForm() {
-      this.temp = {}
+      this.temp = {
+        showStock: 1
+      }
     },
-    saveCardPwd() {
+    save() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          save(this.temp).then(r => {
-            if (r.data.data) {
-              this.$notify({
-                title: '成功',
-                message: '添加卡密成功',
-                type: 'success',
-                duration: 4000
-              })
-              this.temp.cardNo = ''
-              getByCondition({ id: this.temp.goodsId }).then(r => {
-                this.allKms = r.data.data.content[0].kmCount
-              })
-            }
-          })
+          console.log(this.temp)
         }
       })
     },
