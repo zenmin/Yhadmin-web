@@ -55,6 +55,7 @@
 <script>
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
+import Cookies from 'js-cookie'
 
 export default {
   name: 'Login',
@@ -118,6 +119,7 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
+            Cookies.set('language', 'zh')
           }).catch((e) => {
             console.log(e)
             this.loading = false
