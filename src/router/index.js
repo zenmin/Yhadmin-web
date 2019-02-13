@@ -147,6 +147,19 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/coupon',
+    component: Layout,
+    redirect: '/coupon/#',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/category'),
+        name: 'Coupon',
+        meta: { title: '优惠券管理', icon: 'tree', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/config',
     component: Layout,
     redirect: '/config/#',
@@ -170,7 +183,7 @@ export const constantRouterMap = [
         component: () => import('@/views/yhadmin/phoneMsgConfig'),
         name: 'phoneMsgConfig',
         meta: { title: '短信接口', icon: 'message', noCache: true }
-      },{
+      }, {
         path: 'mainConfig',
         component: () => import('@/views/yhadmin/mainConfig'),
         name: 'mainConfig',
@@ -197,22 +210,10 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/version',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/yhadmin/version'),
-        name: 'Version',
-        meta: { title: '程序信息', icon: 'star', noCache: false }
-      }
-    ]
-  },
-  {
     path: '/logs',
     component: Layout,
     redirect: '/logs/#',
-    meta: { title: '平台全局日志', icon: 'money', noCache: true },
+    meta: { title: '平台全局日志', icon: 'eye', noCache: true },
     children: [
       {
         path: 'index',
@@ -224,11 +225,23 @@ export const constantRouterMap = [
         path: 'accesslog',
         component: () => import('@/views/yhadmin/accesslogs'),
         name: 'Accesslogs',
-        meta: { title: '请求日志', icon: 'chart', noCache: true }
+        meta: { title: '请求日志', icon: 'peoples', noCache: true }
       }
 
     ]
   },
+  {
+    path: '/version',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/yhadmin/version'),
+        name: 'Version',
+        meta: { title: '程序信息', icon: 'star', noCache: false }
+      }
+    ]
+  }
 ]
 
 export default new Router({

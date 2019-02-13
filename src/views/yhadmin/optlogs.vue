@@ -57,17 +57,18 @@
 
     <pagination v-show="total>0" :total="total" :start.sync="listQuery.start" :size.sync="listQuery.size" @pagination="getList" />
 
-    <el-dialog title="参数详细" :visible.sync="dialogFormVisible">
-    <el-tag>请求参数</el-tag>
+    <el-dialog :visible.sync="dialogFormVisible" title="参数详细">
+      <el-tag>请求参数</el-tag>
+      <el-tag><a href="http://www.bejson.com/" target="_blank">格式化</a></el-tag>
       <br>
-        <span>{{ this.paramsTemp }}</span>
+      <span>{{ this.paramsTemp }}</span>
     </el-dialog>
 
   </div>
 </template>
 
 <script>
-import { optList , getByCondition } from '@/api/logs'
+import { optList, getByCondition } from '@/api/logs'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // 分页组件 Secondary package based on el-pagination
@@ -181,10 +182,10 @@ export default {
       this.listQuery.start = 0
       this.getByCondition()
     },
-    openDiag(data){
-      if(this.dialogFormVisible === true){
+    openDiag(data) {
+      if (this.dialogFormVisible === true) {
         this.dialogFormVisible = false
-      }else{
+      } else {
         this.dialogFormVisible = true
       }
       this.paramsTemp = data

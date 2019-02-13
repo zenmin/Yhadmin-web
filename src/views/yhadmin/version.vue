@@ -172,29 +172,33 @@
           </tbody>
         </table><!----><!----><!----><!----><!----><!---->
       </div>
-      <div class="el-table__column-resize-proxy" style="display: none;"></div>
+      <div class="el-table__column-resize-proxy" style="display: none;"/>
     </div>
 
     <div style="width: 48%;float: left">
-      <el-alert :closable="false" title="声明：" show-icon description="
-      本程序只作学习交流使用，仅供个人研究之用，请安装后在 24 小时内删除，请勿用于商业及非法用途，如由此引起的相关法律法规责任，与开发人员无关！"  type="warning">  </el-alert>
-      <br /><br />
+      <el-alert
+        :closable="false"
+        title="声明："
+        show-icon
+        description="
+      本程序只作学习交流使用，仅供个人研究之用，请安装后在 24 小时内删除，请勿用于商业及非法用途，如由此引起的相关法律法规责任，与开发人员无关！"
+        type="warning"/>
+      <br ><br >
 
-      <el-alert show-icon title="如果您对本程序感到满意，请捐助我们！" type="success" @close="changShow" :closable="false">
+      <el-alert :closable="false" show-icon title="如果您对本程序感到满意，请捐助我们！" type="success" @close="changShow">
         <el-tag style="margin-left: 100px;"><a href="javascript:void(0)" type="success" @click="changShow">立即捐助</a></el-tag>
       </el-alert>
-        <div id="payImg" style=" padding-left: 9%;" v-show="isShow">
-          <img src="@/views/yhadmin/img/F7F60AEBB0F615DA9AAE7E307731A0D5.jpg" width="200" height="300" />
-          <img src="@/views/yhadmin/img/2C88E7F1F0ACBB45C2BCCCA4667A4A38.jpg" width="200" height="300" />
-        </div>
-      <br /><br />
+      <div v-show="isShow" id="payImg" style=" padding-left: 9%;">
+        <img src="@/views/yhadmin/img/F7F60AEBB0F615DA9AAE7E307731A0D5.jpg" width="200" height="300" >
+        <img src="@/views/yhadmin/img/2C88E7F1F0ACBB45C2BCCCA4667A4A38.jpg" width="200" height="300" >
+      </div>
+      <br ><br >
 
-      <el-alert :closable="false" type="info" title="如果您想升级程序，请点击此处！" show-icon >
-        <el-tag style="margin-left: 100px;"><a target="_blank" :href="temp.updateurl" type="success">立即升级</a></el-tag>
+      <el-alert :closable="false" type="info" title="如果您想升级程序或需要技术援助，请点击此处！" show-icon >
+        <el-tag style="margin-left: 50px;"><a :href="temp.updateurl" target="_blank" type="success">立即升级</a></el-tag>
       </el-alert>
 
     </div>
-
 
   </div>
 </template>
@@ -221,14 +225,14 @@ export default {
       console.log(r.data.data)
     })
   },
-  methods:{
-      getVersion() {
-        return request ({
-          url: '/api/home/version',
-          method: 'post',
-          data: null
-        });
-      },
+  methods: {
+    getVersion() {
+      return request({
+        url: '/api/home/version',
+        method: 'post',
+        data: null
+      })
+    },
     changShow() {
       if (this.isShow === true) {
         this.isShow = false

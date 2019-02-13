@@ -65,8 +65,7 @@
       </el-table-column>
       <el-table-column label="商品图片" align="center">
         <template slot-scope="scope">
-          <a v-if="scope.row.img.indexOf(',') == -1" :href=" scope.row.img " target="_blank" style="color: #1e6abc">{{ scope.row.img }}</a>
-          <a v-if="scope.row.img.indexOf(',') != -1" v-for="image in scope.row.img.split(',')" :href=" image " target="_blank" style="color: #1e6abc">{{ image }}</a>
+          <el-tag><a href="javascript:void(0)" style="color: #1e6abc" @click="showImg(scope.row)">查看</a></el-tag>
         </template>
       </el-table-column>
       <el-table-column label="库存卡密" align="center">
@@ -74,7 +73,7 @@
           <span>{{ scope.row.kmCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
         <template slot-scope="scope">
           <el-button type="success" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="deleteCate(scope.$index, scope.row.id,list)">删除</el-button>
@@ -84,7 +83,7 @@
 
     <pagination v-show="total>0" :total="total" :start.sync="listQuery.start" :size.sync="listQuery.size" @pagination="getList" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-press-escape="false">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item label="商品分类" prop="cid">
           <el-select v-model="temp.cid" placeholder="请选择" clearable style="width: 90px" class="filter-item">
@@ -111,10 +110,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="提取密码" prop="pullPwd">
-          <el-input v-model="temp.pullPwd" :disabled="isDisabled"/>
+          <el-input v-model="temp.pullPwd" :disabled="temp.needPwd === true ? false : true"/>
         </el-form-item>
         <el-form-item label="商品图片" prop="img">
-          <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" :btnText="showText"/>
+          <el-tag><a href="javascript:void(0)" style="color: #1e6abc" @click="showImg(temp)">查看图片</a></el-tag>
+          <editorImage :btn-text="showText" color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
         </el-form-item>
         <el-form-item label="商品描述" prop="goodsDesc">
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.goodsDesc" type="textarea" />
@@ -125,12 +125,33 @@
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="imgDialogFormVisible" :close-on-press-escape="false" title="查看图片">
+      <el-row v-if="imgDialogs.imgs[0] != undefined">
+        <el-col v-for="(img,index) in imgDialogs.imgs" :span="8" :key="img" >
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="img" class="image">
+            <div style="padding: 14px;">
+              <div class="bottom clearfix">
+                <time class="time">图片 {{ index+1 }}</time>
+                <el-button type="text" class="button" @click="updateImage(img)">删除</el-button>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row v-if="imgDialogs.imgs[0] === undefined">
+        <span>暂无图片</span>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="imgDialogFormVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-import { fetchList, getByCondition, save, deleteById } from '@/api/goods'
+import { fetchList, getByCondition, save, deleteById, updateImg } from '@/api/goods'
 import categoryApi from '@/api/category'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
@@ -139,7 +160,7 @@ import editorImage from '@/components/Tinymce/components/editorImage'
 
 export default {
   directives: { waves },
-  components: { Pagination, editorImage},
+  components: { Pagination, editorImage },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -212,6 +233,11 @@ export default {
         pullPwd: ''
       },
       dialogFormVisible: false,
+      imgDialogFormVisible: false,
+      imgDialogs: {
+        imgs: [],
+        goodsId: ''
+      },
       dialogStatus: '',
       textMap: {
         update: '更新商品',
@@ -222,7 +248,8 @@ export default {
         name: [{ required: true, message: '名称不能为空哦！', trigger: 'blur' }],
         cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      selectRow: undefined
     }
   },
   created() {
@@ -295,7 +322,6 @@ export default {
     checkOpts(data) {
       if (data) {
         this.isDisabled = false
-        this.temp.pullPwd = ''
       } else {
         this.temp.pullPwd = ''
         this.isDisabled = true
@@ -374,6 +400,39 @@ export default {
         }
       })
     },
+    updateImage(img) {
+      this.$confirm('是否删除？').then(_ => {
+        var imgs = []
+        this.imgDialogs.imgs.forEach(function(i) {
+          if (i !== img) { imgs.push(i) }
+        })
+        this.imgDialogs.imgs = imgs
+        // 发送请求修改图片
+        var nowImgs = ''
+        for (var i = 0; i < this.imgDialogs.imgs.length; i++) {
+          nowImgs += this.imgDialogs.imgs[i] + ','
+        }
+        nowImgs = nowImgs.substring(0, nowImgs.length - 1)
+        this.selectRow.img = nowImgs
+        updateImg({ id: this.imgDialogs.goodsId, imgs: nowImgs }).then(r => {
+          if (r.data.code === 100) {
+            this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success',
+              duration: 4000
+            })
+          } else {
+            this.$message({
+              message: r.data.msg,
+              type: 'warning',
+              duration: 4000
+            })
+            return
+          }
+        })
+      })
+    },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
@@ -389,13 +448,29 @@ export default {
       })
     },
     imageSuccessCBK(data) {
-      let urls = '';
-      for( var i in data){
-        console.log(data[i])
-        urls +=data[i].url + ',';
+      let urls = ''
+      for (var i in data) {
+        urls += data[i].url + ','
       }
-      urls = urls.substring(0,urls.length - 1)
-      this.temp.img = urls
+      urls = urls.substring(0, urls.length - 1)
+      if (this.temp.img === '') { this.temp.img += urls } else { this.temp.img += ',' + urls }
+    },
+    showImg(row) {
+      const images = row.img
+      const goodsId = row.id
+      this.selectRow = row
+      this.imgDialogFormVisible = true
+      this.imgDialogs.goodsId = goodsId
+      this.imgDialogs.imgs = []
+      if (images !== '') {
+        if (images.indexOf(',') != -1) {
+          this.imgDialogs.imgs = images.split(',')
+        } else {
+          this.imgDialogs.imgs.push(images)
+        }
+      } else {
+        this.imgDialogs.imgs = []
+      }
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
@@ -409,3 +484,34 @@ export default {
   }
 }
 </script>
+<style>
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+
+  .clearfix:after {
+    clear: both
+  }
+</style>

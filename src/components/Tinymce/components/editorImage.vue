@@ -1,8 +1,7 @@
 <template>
   <div class="upload-container">
-    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">{{ btnText }}
-    </el-button>
-    <el-dialog :visible.sync="dialogVisible">
+    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">上传图片</el-button>
+    <el-dialog :visible.sync="dialogVisible" :modal="false">
       <el-upload
         :multiple="true"
         :file-list="fileList"
@@ -22,7 +21,6 @@
 </template>
 
 <script>
-// import { getToken } from 'api/qiniu'
 
 export default {
   name: 'EditorSlideUpload',
@@ -30,10 +28,6 @@ export default {
     color: {
       type: String,
       default: '#1890ff'
-    },
-    btnText: {
-      type: String,
-      default: '上传图片'
     }
   },
   data() {

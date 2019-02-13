@@ -39,3 +39,11 @@ export function deleteById(id) {
     data: id
   })
 }
+
+export function updateImg(data) {
+  return request({
+    url: '/api/goods/updateImg',
+    method: 'post',
+    data: data
+  })
+}
