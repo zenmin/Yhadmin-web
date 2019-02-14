@@ -303,6 +303,7 @@ export default {
                 duration: 4000
               })
               list.splice(index, 1)
+              this.total--
             } else {
               this.$notify({
                 title: '失败',

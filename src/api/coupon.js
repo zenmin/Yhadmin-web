@@ -1,17 +1,8 @@
 import request from '@/utils/request'
 
-export default {
-  getCategories() {
-    return request({
-      url: '/api/coupon/getAll',
-      method: 'get'
-    })
-  }
-}
-
 export function fetchList(query) {
   return request({
-    url: '/api/category/getAll',
+    url: '/api/coupon/getAll',
     method: 'get',
     params: query
   })
@@ -19,7 +10,7 @@ export function fetchList(query) {
 
 export function getByCondition(query) {
   return request({
-    url: '/api/category/getByCondition',
+    url: '/api/coupon/getByCondition',
     method: 'post',
     data: query
   })
@@ -27,7 +18,7 @@ export function getByCondition(query) {
 
 export function save(data) {
   return request({
-    url: '/api/category/save',
+    url: '/api/coupon/save',
     method: 'post',
     data: data
   })
@@ -35,7 +26,7 @@ export function save(data) {
 
 export function deleteById(id) {
   return request({
-    url: '/api/category/delete',
+    url: '/api/coupon/delete',
     method: 'post',
     data: id
   })

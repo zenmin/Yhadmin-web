@@ -153,7 +153,7 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/yhadmin/category'),
+        component: () => import('@/views/yhadmin/coupon'),
         name: 'Coupon',
         meta: { title: '优惠券管理', icon: 'tree', noCache: true }
       }

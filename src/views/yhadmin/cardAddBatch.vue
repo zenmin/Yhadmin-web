@@ -63,10 +63,11 @@ export default {
   },
   methods: {
     getGoodsAll(cid) {
-      const json = {}
-      json.cid = cid
-      return getByCondition(json).then((r) => {
-        return r.data.data.content
+      return getByCondition({cid:cid}).then((r) => {
+        if(r.data.data.content.length>0)
+          return r.data.data.content
+        else
+          return []
       })
     },
     getCategories() {
@@ -75,6 +76,9 @@ export default {
       })
     },
     checkCate(data) {
+      this.temp.goodsId = null
+      this.allKms = 0
+      this.isDisabled = true
       this.getGoodsAll(data).then(r => {
         this.goodsAll = r
       })
@@ -82,10 +86,11 @@ export default {
     checkGoods(data) {
       if (data != null) {
         this.isDisabled = false
-        const json = {}
-        json.id = data
-        getByCondition(json).then(r => {
-          this.allKms = r.data.data.content[0].kmCount
+        getByCondition({id:data}).then(r => {
+          if(r.data.data.content.length>0)
+            this.allKms = r.data.data.content[0].kmCount
+          else
+            this.allKms = 0
         })
       } else {
         this.isDisabled = true
@@ -97,8 +102,10 @@ export default {
     saveCardPwd() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          if(this.temp.cid == '' || this.temp.goodsId == '' || this.cardNo == '')
+            return
           save(this.temp).then(r => {
-            if (r.data.data) {
+            if (r.data.code === 100) {
               this.$notify({
                 title: '成功',
                 message: '添加卡密成功',
@@ -108,6 +115,13 @@ export default {
               this.temp.cardNo = ''
               getByCondition({ id: this.temp.goodsId }).then(r => {
                 this.allKms = r.data.data.content[0].kmCount
+              })
+            }else{
+              this.$notify({
+                title: '失败',
+                message: r.data.msg,
+                type: 'error',
+                duration: 4000
               })
             }
           })
