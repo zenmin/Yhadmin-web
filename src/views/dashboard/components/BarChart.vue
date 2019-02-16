@@ -22,6 +22,12 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    nowData: {
+      type: Array,
+      default: function() {
+        return []
+      }
     }
   },
   data() {
@@ -30,7 +36,10 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    let that = this
+    setTimeout(function() {
+      that.initChart()
+    },1000)
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -49,7 +58,12 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      let dates = []
+      let vs = []
+      this.nowData.forEach(d=>{
+        dates.push(d.date)
+        vs.push(d.count)
+      })
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -66,7 +80,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: dates,
           axisTick: {
             alignWithLabel: true
           }
@@ -78,25 +92,11 @@ export default {
           }
         }],
         series: [{
-          name: 'pageA',
+          name: '支付订单数',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          data: vs,
           animationDuration
         }]
       })

@@ -78,10 +78,10 @@ export default {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ dateData,expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: dateData,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -107,10 +107,10 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['订单数量', '金额']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '订单数量', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -126,7 +126,7 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '金额',
           smooth: true,
           type: 'line',
           itemStyle: {

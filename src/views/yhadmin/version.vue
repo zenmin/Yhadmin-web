@@ -228,7 +228,7 @@ export default {
   methods: {
     getVersion() {
       return request({
-        url: '/api/home/version',
+        url: '/api/index/version',
         method: 'post',
         data: null
       })

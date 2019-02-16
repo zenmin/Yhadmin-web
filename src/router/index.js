@@ -133,14 +133,14 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/yhadmin/cardpwd'),
-        name: 'roderList',
+        component: () => import('@/views/yhadmin/orderList'),
+        name: 'orderList',
         meta: { title: '订单列表', icon: 'list', noCache: true }
       },
       {
         path: 'cardAddBatch',
-        component: () => import('@/views/yhadmin/cardAddBatch'),
-        name: 'roderAlia',
+        component: () => import('@/views/yhadmin/orderAlia'),
+        name: 'orderAlia',
         meta: { title: '订单分析', icon: 'chart', noCache: true }
       }
 

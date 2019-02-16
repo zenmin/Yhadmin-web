@@ -20,6 +20,12 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    payWay: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   data() {
@@ -28,7 +34,10 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    let that = this
+    setTimeout(function() {
+      that.initChart()
+    },1000)
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -47,7 +56,21 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      const pys = []
+      this.payWay.forEach(p => {
+        let v = ''
+        if(p.name === 'wxpay'){
+          v = '微信支付'
+        }
+        if(p.name === 'qqpay'){
+          v = 'QQ支付'
+        }
+        if(p.name === 'alipay'){
+          v = '支付宝支付'
+        }
+        p.name = v
+        pys.push(v)
+      })
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
@@ -56,23 +79,17 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: pys
         },
         calculable: true,
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '支付方式',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: this.payWay,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

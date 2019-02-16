@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="listQuery.cardNo" placeholder="卡密编码" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-select v-model="listQuery.goodsId" placeholder="关联商品" clearable style="width: 120px" class="filter-item">
         <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
@@ -46,7 +46,7 @@
           <el-tag v-if="scope.row.status == 1"><span style="color:#F67E7E;">已使用</span> </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" >
         <template slot-scope="scope">
           <el-button type="success" size="mini" @click="handleUpdate(scope.row)">详情</el-button>
           <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="deleteCate(scope.$index, scope.row.id,list)">删除</el-button>
@@ -350,8 +350,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['分类名称', '分类描述', '创建时间', '排序', '状态']
-        const filterVal = ['name', 'categoryDesc', 'createDate', 'sort', 'status']
+        const tHeader = ['卡密编码', '关联商品', '添加时间', '添加人', '状态', '使用时间', '使用人']
+        const filterVal = ['cardNo', 'goodsName', 'createDate', 'useDate', 'useUser']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

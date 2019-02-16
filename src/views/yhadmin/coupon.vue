@@ -8,7 +8,7 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加优惠券</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
-      <el-alert :closable="false" type="info" title="折扣后价格 = 商品原价 - 商品原价 x 折扣 " show-icon ></el-alert>
+      <el-alert :closable="false" type="info" title="折扣后价格 = 商品原价 - 商品原价 x 折扣 " show-icon />
     </div>
 
     <el-table
@@ -95,12 +95,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否长期有效" prop="validLong">
-          <el-select v-model="temp.validLong" class="filter-item"  @change="checkOpts">
+          <el-select v-model="temp.validLong" class="filter-item" @change="checkOpts">
             <el-option v-for="item in isLong" :key="item.value" :label="item.name" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="失效时间" prop="disDate">
-          <el-date-picker v-model="temp.disDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="" :disabled="temp.validLong === 1"/>
+          <el-date-picker v-model="temp.disDate" :disabled="temp.validLong === 1" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder=""/>
         </el-form-item>
         <el-form-item label="描述" prop="couponDesc">
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.couponDesc" type="textarea" />
@@ -203,7 +203,7 @@ export default {
         disDateField: '',
         saleRate: 0,
         status: 1,
-        validLong: 1,
+        validLong: 1
       },
       resTemp: {
         couponDesc: '',
@@ -322,7 +322,7 @@ export default {
           delete this.temp.createDate
           this.temp.disDateField = this.temp.disDate
           delete this.temp.disDate
-          if(!this.validateInput()){
+          if (!this.validateInput()) {
             return
           }
           save(this.temp).then(r => {
@@ -362,7 +362,7 @@ export default {
           delete tempData.couponNo
           this.temp.disDateField = this.temp.disDate
           delete tempData.disDate
-          if(!this.validateInput()){
+          if (!this.validateInput()) {
             return
           }
           save(tempData).then(() => {
@@ -384,18 +384,18 @@ export default {
         }
       })
     },
-    validateInput(){
-      if(this.temp.saleRate <= 0 || this.temp.saleRate>100 ){
-          this.$message({
-            message: "折扣必须在1~100之间！",
-            type: "error"
-          })
+    validateInput() {
+      if (this.temp.saleRate <= 0 || this.temp.saleRate > 100) {
+        this.$message({
+          message: '折扣必须在1~100之间！',
+          type: 'error'
+        })
         return false
       }
-      if(this.temp.validLong === 0 && (this.temp.disDateField === null || this.temp.disDateField === '')){
+      if (this.temp.validLong === 0 && (this.temp.disDateField === null || this.temp.disDateField === '')) {
         this.$message({
-          message: "非长期有效优惠券必须填写失效时间！",
-          type: "error"
+          message: '非长期有效优惠券必须填写失效时间！',
+          type: 'error'
         })
         return false
       }
@@ -443,7 +443,7 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '商品列表'
+          filename: '优惠券列表'
         })
         this.downloadLoading = false
       })

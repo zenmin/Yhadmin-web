@@ -1,46 +1,46 @@
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num"/>
+          <div class="card-panel-text">下单用户</div>
+          <count-to :start-val="0" :end-val="nowData.orderUsers" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+          <svg-icon icon-class="lock" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Messages</div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num"/>
+          <div class="card-panel-text">库存卡密</div>
+          <count-to :start-val="0" :end-val="nowData.cardPwds" :duration="3000" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Purchases</div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num"/>
+          <div class="card-panel-text">今日成交</div>
+          <count-to :start-val="0.01" :end-val="nowData.nowPrice" :duration="3600" :decimals="2" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Shoppings</div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num"/>
+          <div class="card-panel-text">今日订单</div>
+          <count-to :start-val="0" :end-val="nowData.orderNum" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -54,11 +54,32 @@ export default {
   components: {
     CountTo
   },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+  props:{
+    nowData: {
+      orderUsers: {
+        type: String,
+        default: '0'
+      },
+      cardPwds:  {
+        type: String,
+        default: '0'
+      },
+      nowPrice: {
+        type: String,
+        default: '0.00'
+      },
+      orderNum: {
+        type: String,
+        default: '0'
+      },
     }
-  }
+  },
+  data(){
+    return {
+    }
+  },
+  created() {
+  },
 }
 </script>
 
@@ -69,8 +90,8 @@ export default {
     margin-bottom: 32px;
   }
   .card-panel {
+    cursor: auto;
     height: 108px;
-    cursor: pointer;
     font-size: 12px;
     position: relative;
     overflow: hidden;
@@ -113,10 +134,12 @@ export default {
       padding: 16px;
       transition: all 0.38s ease-out;
       border-radius: 6px;
+      cursor: auto;
     }
     .card-panel-icon {
       float: left;
       font-size: 48px;
+      cursor: auto;
     }
     .card-panel-description {
       float: right;
@@ -128,6 +151,7 @@ export default {
         color: rgba(0, 0, 0, 0.45);
         font-size: 16px;
         margin-bottom: 12px;
+        cursor: auto;
       }
       .card-panel-num {
         font-size: 20px;
