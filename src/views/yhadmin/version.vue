@@ -185,7 +185,7 @@
         type="warning"/>
       <br ><br >
 
-      <el-alert :closable="false" show-icon title="如果您对本程序感到满意，请捐助我们！" type="success" @close="changShow">
+      <el-alert :closable="false" show-icon title="如果本程序对您有帮助，请捐助我们！" type="success" @close="changShow">
         <el-tag style="margin-left: 100px;"><a href="javascript:void(0)" type="success" @click="changShow">立即捐助</a></el-tag>
       </el-alert>
       <div v-show="isShow" id="payImg" style=" padding-left: 9%;">
@@ -195,7 +195,7 @@
       <br ><br >
 
       <el-alert :closable="false" type="info" title="如果您想升级程序或需要技术援助，请点击此处！" show-icon >
-        <el-tag style="margin-left: 50px;"><a :href="temp.updateurl" target="_blank" type="success">立即升级</a></el-tag>
+        <el-tag style="margin-left: 40px;"><a :href="temp.updateurl" target="_blank" type="success">立即升级</a></el-tag>
       </el-alert>
 
     </div>

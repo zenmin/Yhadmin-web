@@ -1,50 +1,29 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 50%">
-      <el-form-item label="网站主标题" prop="mainTitle">
-         <el-input v-model="temp.mainTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站副标题" prop="subTitle">
-        <el-input v-model="temp.subTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站描述" prop="titleDesc">
-        <el-input v-model="temp.titleDesc"></el-input>
-      </el-form-item>
-      <el-form-item label="主页公告" prop="mainNotice">
-        <el-input v-model="temp.mainNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="查订单页面公告" prop="subNotice">
-        <el-input v-model="temp.subNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="底部版权" prop="copyRight">
-        <el-input v-model="temp.copyRight"></el-input>
-      </el-form-item>
-      <el-form-item label="首页风格" prop="wbeStyle">
-        <el-input v-model="temp.wbeStyle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站LOGO" prop="logo">
-        <el-input v-model="temp.logo"></el-input>
-      </el-form-item>
-      <el-form-item label="首页背景图" prop="bgImg">
-        <el-input v-model="temp.bgImg"></el-input>
-      </el-form-item>
-      <el-form-item label="是否显示库存" prop="showStock">
-        <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" @change="checkCate" >
-          <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="" prop="">
-        <el-button @click="cancelForm">清空</el-button>
-        <el-button type="primary" @click="saveCardPwd">保存配置</el-button>
-      </el-form-item>
+    <el-alert :closable="false" type="info" title="模板正在不断加入中，如果你需要定制模板请联系开发者！" show-icon style="width: 100%"/>
+    <br>
+    <el-form ref="dataForm" :model="temp" style="width: 100%;">
+      <el-row>
+        <el-col :span="4" v-for="(o) in temp.temps" :key="o.name" style="float: left;margin-left: 10px;">
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="'static/' + o.img" class="image">
+            <div style="padding: 14px;">
+              <span>{{ o.name }}</span>
+              <el-button type="text" class="button" @click="saveCardPwd(o.path)">
+                <el-tag>使用此模板
+                  <i class="el-icon-circle-check" v-if="o.path == temp.index_style"></i>
+                </el-tag>
+              </el-button>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
-import { save } from '@/api/cardpwd'
-import { getByCondition } from '@/api/goods'
-import categoryApi from '@/api/category'
+import { save,getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -55,71 +34,42 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
-      listLoading: true,
-      cardNo: undefined,
-      status: undefined,
-      goodsId: undefined,
-      categoryAll: [
-        {
-          code: 1,
-          name: '是'
-        },
-        {
-          code: 0,
-          name: '否'
-        }
-        ],
-      goodsAll: [],
       temp: {
-        mainTitle: '',
-        subTitle: '',
-        titleDesc: '',
-        keyWords: '',
-        mainNotice: '',
-        subNotice: '',
-        copyRight: '',
-        showStock: 1,
-        wbeStyle: '',
-        logo: '',
-        bgImg: ''
+        type: 5,
+        index_style: '',
+        temps: [
+          {
+            path: "webtemps/default",
+            img: "webtemps/default/index.jpg",
+            name: "default"
+          }
+        ]
       },
-      isDisabled: true,
-      rules: {
-        cardNo: [{ required: true, message: '卡密不能为空哦！', trigger: 'blur' }],
-        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }],
-        goodsId: [{ required: true, message: '必须选一个商品哦！', trigger: 'blur' }]
-      },
-      allKms: 0,
-      cid: ''
+      isThisTemp: false,
+
     }
   },
   created() {
-    this.getCategories().then(r => {
-      this.categoryAll = r
+    getByCondition({ type: 5 }).then(r => {
+      this.temp = r.data.data
     })
   },
   methods: {
-    cancelForm() {
-      this.temp = {}
-    },
-    saveCardPwd() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          save(this.temp).then(r => {
-            if (r.data.data) {
-              this.$notify({
-                title: '成功',
-                message: '添加卡密成功',
-                type: 'success',
-                duration: 4000
-              })
-              this.temp.cardNo = ''
-              getByCondition({ id: this.temp.goodsId }).then(r => {
-                this.allKms = r.data.data.content[0].kmCount
-              })
-            }
-          })
-        }
+    saveCardPwd(path) {
+      this.$confirm('是否使用此模板？').then(_ => {
+        save({ type: this.temp.type, index_style: path }).then(r => {
+          if (r.data.data) {
+            this.$notify({
+              title: '成功',
+              message: '更新模板成功，立即生效',
+              type: 'success',
+              duration: 4000
+            })
+            getByCondition({ type: 5 }).then(r => {
+              this.temp = r.data.data
+            })
+          }
+        })
       })
     },
     formatJson(filterVal, jsonData) {
@@ -134,3 +84,15 @@ export default {
   }
 }
 </script>
+<style>
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+</style>

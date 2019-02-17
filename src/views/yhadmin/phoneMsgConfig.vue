@@ -1,37 +1,34 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 50%">
-      <el-form-item label="网站主标题" prop="mainTitle">
-         <el-input v-model="temp.mainTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站副标题" prop="subTitle">
-        <el-input v-model="temp.subTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站描述" prop="titleDesc">
-        <el-input v-model="temp.titleDesc"></el-input>
-      </el-form-item>
-      <el-form-item label="主页公告" prop="mainNotice">
-        <el-input v-model="temp.mainNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="查订单页面公告" prop="subNotice">
-        <el-input v-model="temp.subNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="底部版权" prop="copyRight">
-        <el-input v-model="temp.copyRight"></el-input>
-      </el-form-item>
-      <el-form-item label="首页风格" prop="wbeStyle">
-        <el-input v-model="temp.wbeStyle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站LOGO" prop="logo">
-        <el-input v-model="temp.logo"></el-input>
-      </el-form-item>
-      <el-form-item label="首页背景图" prop="bgImg">
-        <el-input v-model="temp.bgImg"></el-input>
-      </el-form-item>
-      <el-form-item label="是否显示库存" prop="showStock">
-        <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" @change="checkCate" >
+    <el-alert :closable="false" type="info" title="本系统集成阿里云短信(阿里大于)接口，详见：https://dysms.console.aliyun.com" show-icon />
+    <br>
+    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="230px" style="width: 50%">
+      <el-form-item label="发送短信开关" prop="status">
+        <el-select v-model="temp.status" placeholder=""  :clearable="false" style="width: 230px" class="filter-item" >
           <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="阿里云ACCESS_KEY_ID" prop="app_id">
+         <el-input v-model="temp.app_id">
+            <el-button slot="append" icon="el-icon-question" title="去阿里云获取" @click="toAliyun(true)"></el-button>
+         </el-input>
+      </el-form-item>
+      <el-form-item label="阿里云ACCESS_KEY_SECRET" prop="app_key">
+        <el-input v-model="temp.app_key">
+          <el-button slot="append" icon="el-icon-question" title="去阿里云获取" @click="toAliyun(true)"></el-button>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="模板CODE" prop="smsTemplateCode">
+        <el-input v-model="temp.smsTemplateCode"><template slot="append">如：SMS_85445010</template></el-input>
+      </el-form-item>
+      <el-form-item label="短信签名" prop="smsSignName">
+        <el-input v-model="temp.smsSignName">
+          <el-button slot="append" icon="el-icon-question" title="去阿里云获取" @click="toAliyun(false)"></el-button>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="模板参数" prop="smsTemplate">
+        <el-input v-model="temp.smsTemplate"></el-input>
+        <el-alert :closable="false" type="info" title="如您的模板是 “你的本次购买的卡密是${code}，感谢使用！” ，那么这里模板参数只需填入code，多个参数用“,”隔开即可！" show-icon />
       </el-form-item>
       <el-form-item label="" prop="">
         <el-button @click="cancelForm">清空</el-button>
@@ -42,9 +39,7 @@
 </template>
 
 <script>
-import { save } from '@/api/cardpwd'
-import { getByCondition } from '@/api/goods'
-import categoryApi from '@/api/category'
+import { save,getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -61,46 +56,56 @@ export default {
       goodsId: undefined,
       categoryAll: [
         {
-          code: 1,
-          name: '是'
+          code: 0,
+          name: '关闭'
         },
         {
-          code: 0,
-          name: '否'
+          code: 1,
+          name: '开启'
         }
         ],
-      goodsAll: [],
       temp: {
-        mainTitle: '',
-        subTitle: '',
-        titleDesc: '',
-        keyWords: '',
-        mainNotice: '',
-        subNotice: '',
-        copyRight: '',
-        showStock: 1,
-        wbeStyle: '',
-        logo: '',
-        bgImg: ''
+        status: 0,
+        app_id: '',
+        app_key: '',
+        smsTemplateCode: '',
+        smsTemplate: 'code',
+        smsSignName: '',
+        type: 1
       },
       isDisabled: true,
       rules: {
-        cardNo: [{ required: true, message: '卡密不能为空哦！', trigger: 'blur' }],
-        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }],
-        goodsId: [{ required: true, message: '必须选一个商品哦！', trigger: 'blur' }]
-      },
-      allKms: 0,
-      cid: ''
+        status: [{ required: true, message: '不能为空哦！', trigger: 'blur' }],
+        app_id: [{ required: true, message: '不能为空哦！', trigger: 'blur' }],
+        app_key: [{ required: true, message: '不能为空哦！', trigger: 'blur' }],
+        smsTemplateCode: [{ required: true, message: '不能为空哦！', trigger: 'blur' }],
+        smsTemplate: [{ required: true, message: '不能为空哦！', trigger: 'blur' }],
+        smsSignName: [{ required: true, message: '不能为空哦！', trigger: 'blur' }]
+      }
     }
   },
   created() {
-    this.getCategories().then(r => {
-      this.categoryAll = r
+    getByCondition({type:1}).then(r=>{
+      this.temp = r.data.data
     })
   },
   methods: {
+    toAliyun(openUser){
+      if(openUser)
+        window.open("https://usercenter.console.aliyun.com");
+      else
+        window.open("https://dysms.console.aliyun.com/dysms.htm#/domestic/text/sign");
+    },
     cancelForm() {
-      this.temp = {}
+      this.temp = {
+        status: 0,
+        app_id: '',
+        app_key: '',
+        smsTemplateCode: '',
+        smsTemplate: '',
+        smsSignName: '',
+        type: 1
+      }
     },
     saveCardPwd() {
       this.$refs['dataForm'].validate((valid) => {
@@ -109,13 +114,9 @@ export default {
             if (r.data.data) {
               this.$notify({
                 title: '成功',
-                message: '添加卡密成功',
+                message: '更新短信接口成功',
                 type: 'success',
                 duration: 4000
-              })
-              this.temp.cardNo = ''
-              getByCondition({ id: this.temp.goodsId }).then(r => {
-                this.allKms = r.data.data.content[0].kmCount
               })
             }
           })

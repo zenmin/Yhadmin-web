@@ -184,9 +184,9 @@ export const constantRouterMap = [
         name: 'phoneMsgConfig',
         meta: { title: '短信接口', icon: 'message', noCache: true }
       }, {
-        path: 'mainConfig',
-        component: () => import('@/views/yhadmin/mainConfig'),
-        name: 'mainConfig',
+        path: 'mailConfig',
+        component: () => import('@/views/yhadmin/mailConfig'),
+        name: 'mailConfig',
         meta: { title: '邮件发送', icon: 'email', noCache: true }
       },
       {
@@ -251,17 +251,17 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/svg-icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/svg-icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -1,40 +1,24 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 50%">
-      <el-form-item label="网站主标题" prop="mainTitle">
-         <el-input v-model="temp.mainTitle"></el-input>
+    <el-alert :closable="false" type="info" title="开关关闭后页面不在显示选项" show-icon style="width: 100%"/>
+    <br>
+    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="135px" style="width: 60%">
+      <el-form-item label="微信支付开关" prop="switch_wx">
+        <el-select v-model="temp.switch_wx" placeholder=""  :clearable="false" style="width: 230px" class="filter-item" >
+          <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="网站副标题" prop="subTitle">
-        <el-input v-model="temp.subTitle"></el-input>
+      <el-form-item label="支付宝支付开关" prop="switch_alipay">
+        <el-select v-model="temp.switch_alipay" placeholder=""  :clearable="false" style="width: 230px" class="filter-item" >
+          <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="网站描述" prop="titleDesc">
-        <el-input v-model="temp.titleDesc"></el-input>
-      </el-form-item>
-      <el-form-item label="主页公告" prop="mainNotice">
-        <el-input v-model="temp.mainNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="查订单页面公告" prop="subNotice">
-        <el-input v-model="temp.subNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="底部版权" prop="copyRight">
-        <el-input v-model="temp.copyRight"></el-input>
-      </el-form-item>
-      <el-form-item label="首页风格" prop="wbeStyle">
-        <el-input v-model="temp.wbeStyle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站LOGO" prop="logo">
-        <el-input v-model="temp.logo"></el-input>
-      </el-form-item>
-      <el-form-item label="首页背景图" prop="bgImg">
-        <el-input v-model="temp.bgImg"></el-input>
-      </el-form-item>
-      <el-form-item label="是否显示库存" prop="showStock">
-        <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" @change="checkCate" >
+      <el-form-item label="QQ支付开关" prop="switch_qq">
+        <el-select v-model="temp.switch_qq" placeholder=""  :clearable="false" style="width: 230px" class="filter-item" >
           <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
       </el-form-item>
       <el-form-item label="" prop="">
-        <el-button @click="cancelForm">清空</el-button>
         <el-button type="primary" @click="saveCardPwd">保存配置</el-button>
       </el-form-item>
     </el-form>
@@ -42,9 +26,7 @@
 </template>
 
 <script>
-import { save } from '@/api/cardpwd'
-import { getByCondition } from '@/api/goods'
-import categoryApi from '@/api/category'
+import { save,getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -62,46 +44,31 @@ export default {
       categoryAll: [
         {
           code: 1,
-          name: '是'
+          name: '开启'
         },
         {
           code: 0,
-          name: '否'
+          name: '关闭'
         }
         ],
-      goodsAll: [],
       temp: {
-        mainTitle: '',
-        subTitle: '',
-        titleDesc: '',
-        keyWords: '',
-        mainNotice: '',
-        subNotice: '',
-        copyRight: '',
-        showStock: 1,
-        wbeStyle: '',
-        logo: '',
-        bgImg: ''
+        type: 4,
+        switch_alipay: 1,
+        switch_qq: 1,
+        switch_wx: 1
+
       },
       isDisabled: true,
       rules: {
-        cardNo: [{ required: true, message: '卡密不能为空哦！', trigger: 'blur' }],
-        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }],
-        goodsId: [{ required: true, message: '必须选一个商品哦！', trigger: 'blur' }]
-      },
-      allKms: 0,
-      cid: ''
+      }
     }
   },
   created() {
-    this.getCategories().then(r => {
-      this.categoryAll = r
+    getByCondition({ type: 4 }).then(r => {
+      this.temp = r.data.data
     })
   },
   methods: {
-    cancelForm() {
-      this.temp = {}
-    },
     saveCardPwd() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -109,13 +76,9 @@ export default {
             if (r.data.data) {
               this.$notify({
                 title: '成功',
-                message: '添加卡密成功',
+                message: '更新支付接口开关成功',
                 type: 'success',
                 duration: 4000
-              })
-              this.temp.cardNo = ''
-              getByCondition({ id: this.temp.goodsId }).then(r => {
-                this.allKms = r.data.data.content[0].kmCount
               })
             }
           })

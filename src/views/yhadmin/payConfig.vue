@@ -1,40 +1,23 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 50%">
-      <el-form-item label="网站主标题" prop="mainTitle">
-         <el-input v-model="temp.mainTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站副标题" prop="subTitle">
-        <el-input v-model="temp.subTitle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站描述" prop="titleDesc">
-        <el-input v-model="temp.titleDesc"></el-input>
-      </el-form-item>
-      <el-form-item label="主页公告" prop="mainNotice">
-        <el-input v-model="temp.mainNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="查订单页面公告" prop="subNotice">
-        <el-input v-model="temp.subNotice"></el-input>
-      </el-form-item>
-      <el-form-item label="底部版权" prop="copyRight">
-        <el-input v-model="temp.copyRight"></el-input>
-      </el-form-item>
-      <el-form-item label="首页风格" prop="wbeStyle">
-        <el-input v-model="temp.wbeStyle"></el-input>
-      </el-form-item>
-      <el-form-item label="网站LOGO" prop="logo">
-        <el-input v-model="temp.logo"></el-input>
-      </el-form-item>
-      <el-form-item label="首页背景图" prop="bgImg">
-        <el-input v-model="temp.bgImg"></el-input>
-      </el-form-item>
-      <el-form-item label="是否显示库存" prop="showStock">
-        <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" @change="checkCate" >
+    <el-alert :closable="false" type="info" title="目前集成的较稳定的码支付接口，如需其他接口可联系开发者定制！" show-icon style="width: 60%"/>
+    <br>
+    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 60%">
+      <el-form-item label="接口类型" prop="payType">
+        <el-select v-model="temp.payType" placeholder=""  :clearable="false" class="filter-item" >
           <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
       </el-form-item>
+      <el-form-item label="商户ID" prop="app_id">
+        <el-input v-model="temp.app_id"></el-input>
+      </el-form-item>
+      <el-form-item label="通信密钥" prop="app_key">
+        <el-input v-model="temp.app_key"></el-input>
+        <br>
+        <br>
+        <el-alert :closable="false" type="info" title="可到第三方支付商户控制台获取，以码支付为例：商户后台-系统设置 获取码支付ID和通讯密钥" show-icon style="width: 100%"/>
+      </el-form-item>
       <el-form-item label="" prop="">
-        <el-button @click="cancelForm">清空</el-button>
         <el-button type="primary" @click="saveCardPwd">保存配置</el-button>
       </el-form-item>
     </el-form>
@@ -42,9 +25,7 @@
 </template>
 
 <script>
-import { save } from '@/api/cardpwd'
-import { getByCondition } from '@/api/goods'
-import categoryApi from '@/api/category'
+import { save,getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -61,47 +42,28 @@ export default {
       goodsId: undefined,
       categoryAll: [
         {
-          code: 1,
-          name: '是'
-        },
-        {
-          code: 0,
-          name: '否'
+          code: 'MAPAY',
+          name: '码支付'
         }
         ],
-      goodsAll: [],
       temp: {
-        mainTitle: '',
-        subTitle: '',
-        titleDesc: '',
-        keyWords: '',
-        mainNotice: '',
-        subNotice: '',
-        copyRight: '',
-        showStock: 1,
-        wbeStyle: '',
-        logo: '',
-        bgImg: ''
+        type: 3,
+        payType: 'MAPAY',
+        app_id: '',
+        app_key: ''
+
       },
       isDisabled: true,
       rules: {
-        cardNo: [{ required: true, message: '卡密不能为空哦！', trigger: 'blur' }],
-        cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }],
-        goodsId: [{ required: true, message: '必须选一个商品哦！', trigger: 'blur' }]
-      },
-      allKms: 0,
-      cid: ''
+      }
     }
   },
   created() {
-    this.getCategories().then(r => {
-      this.categoryAll = r
+    getByCondition({ type: 3 }).then(r => {
+      this.temp = r.data.data
     })
   },
   methods: {
-    cancelForm() {
-      this.temp = {}
-    },
     saveCardPwd() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -109,13 +71,9 @@ export default {
             if (r.data.data) {
               this.$notify({
                 title: '成功',
-                message: '添加卡密成功',
+                message: '更新支付接口配置成功',
                 type: 'success',
                 duration: 4000
-              })
-              this.temp.cardNo = ''
-              getByCondition({ id: this.temp.goodsId }).then(r => {
-                this.allKms = r.data.data.content[0].kmCount
               })
             }
           })
