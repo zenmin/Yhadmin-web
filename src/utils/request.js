@@ -4,9 +4,24 @@ import qs from 'qs'
 // import store from '@/store'
 // import { getToken } from '@/utils/auth'
 
+// 请求地址根据环境不同请求的地址也会不同(这里修改而不求改config里面的是为了本地开发请求不同环境的后端API)
+const api = {
+  // 生产环境
+  'prod': () => {
+    return 'http://118.24.82.219:8080'
+  },
+  // 开发环境
+  'dev': () => {
+    return 'http://118.24.82.219:8080'
+  },
+  // 测试环境||模拟环境
+  'sit': () => {
+    return 'http://118.24.82.219:8080'
+  }
+}
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://118.24.82.219:8080', // api 的 base_url
+  baseURL: api[process.env.ENV_CONFIG](), // api 的 base_url
   timeout: 5000 // request timeout
 })
 
