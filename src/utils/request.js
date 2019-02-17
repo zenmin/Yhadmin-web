@@ -6,7 +6,7 @@ import qs from 'qs'
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.BASE_API, // api 的 base_url
+  baseURL: 'http://118.24.82.219:8080', // api 的 base_url
   timeout: 5000 // request timeout
 })
 
