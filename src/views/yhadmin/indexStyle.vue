@@ -4,14 +4,14 @@
     <br>
     <el-form ref="dataForm" :model="temp" style="width: 100%;">
       <el-row>
-        <el-col :span="4" v-for="(o) in temp.temps" :key="o.name" style="float: left;margin-left: 10px;">
+        <el-col v-for="(o) in temp.temps" :span="4" :key="o.name" style="float: left;margin-left: 10px;">
           <el-card :body-style="{ padding: '0px' }">
-            <img :src="'static/' + o.img" class="image">
+            <img :src="o.img" class="image">
             <div style="padding: 14px;">
               <span>{{ o.name }}</span>
               <el-button type="text" class="button" @click="saveCardPwd(o.path)">
                 <el-tag>使用此模板
-                  <i class="el-icon-circle-check" v-if="o.path == temp.index_style"></i>
+                  <i v-if="o.path == temp.index_style" class="el-icon-circle-check"/>
                 </el-tag>
               </el-button>
             </div>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { save,getByCondition } from '@/api/interface'
+import { save, getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -39,13 +39,13 @@ export default {
         index_style: '',
         temps: [
           {
-            path: "webtemps/default",
-            img: "webtemps/default/index.jpg",
-            name: "default"
+            path: 'webtemps/default',
+            img: 'webtemps/default/index.jpg',
+            name: 'default'
           }
         ]
       },
-      isThisTemp: false,
+      isThisTemp: false
 
     }
   },

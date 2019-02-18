@@ -63,15 +63,14 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(response => {
-          console.log(response.data)
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-            reject('error')
+            reject('登录超时，请重新登录')
           }
           const data = response.data
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
           } else {
-            reject('getInfo: roles must be a non-null array !')
+            reject('登录超时，请重新登录 !')
           }
 
           commit('SET_NAME', data.name)

@@ -222,7 +222,6 @@ export default {
   created() {
     this.getVersion().then(r => {
       this.temp = r.data.data
-      console.log(r.data.data)
     })
   },
   methods: {

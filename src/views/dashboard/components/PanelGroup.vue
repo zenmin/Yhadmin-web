@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">下单用户</div>
-          <count-to :start-val="0" :end-val="nowData.orderUsers" :duration="2600" class="card-panel-num"/>
+          <count-to v-if="nowData" :start-val="0" :end-val="nowData.orderUsers" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -18,7 +18,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">库存卡密</div>
-          <count-to :start-val="0" :end-val="nowData.cardPwds" :duration="3000" class="card-panel-num"/>
+          <count-to v-if="nowData" :start-val="0" :end-val="nowData.cardPwds" :duration="3000" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -29,7 +29,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">今日成交</div>
-          <count-to :start-val="0.01" :end-val="nowData.nowPrice" :duration="3600" :decimals="2" class="card-panel-num"/>
+          <count-to v-if="nowData" :start-val="0.01" :end-val="nowData.nowPrice" :duration="3600" :decimals="2" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -40,7 +40,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">今日订单</div>
-          <count-to :start-val="0" :end-val="nowData.orderNum" :duration="3600" class="card-panel-num"/>
+          <count-to v-if="nowData" :start-val="0" :end-val="nowData.orderNum" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -54,13 +54,13 @@ export default {
   components: {
     CountTo
   },
-  props:{
+  props: {
     nowData: {
       orderUsers: {
         type: String,
         default: '0'
       },
-      cardPwds:  {
+      cardPwds: {
         type: String,
         default: '0'
       },
@@ -71,15 +71,15 @@ export default {
       orderNum: {
         type: String,
         default: '0'
-      },
+      }
     }
   },
-  data(){
+  data() {
     return {
     }
   },
   created() {
-  },
+  }
 }
 </script>
 

@@ -233,6 +233,7 @@ export const constantRouterMap = [
   {
     path: '/version',
     component: Layout,
+    redirect: '/version/#',
     children: [
       {
         path: 'index',
