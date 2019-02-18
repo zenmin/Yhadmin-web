@@ -203,9 +203,6 @@
   </div>
 </template>
 
-<style>
-</style>
-
 <script>
 import request from '@/utils/request'
 

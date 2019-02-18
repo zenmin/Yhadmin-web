@@ -4,9 +4,6 @@
   </div>
 </template>
 
-<style>
-</style>
-
 <script>
 
 export default {
@@ -20,7 +17,7 @@ export default {
   },
   created() {
   },
-  methods:{
+  methods: {
 
   }
 
