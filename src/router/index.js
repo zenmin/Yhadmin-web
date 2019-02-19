@@ -163,12 +163,19 @@ export const constantRouterMap = [
     path: '/config',
     component: Layout,
     redirect: '/config/#',
+    meta: { title: '平台配置', icon: 'component', noCache: true },
     children: [
       {
         path: 'index',
         component: () => import('@/views/yhadmin/webconfig'),
         name: 'webConfig',
-        meta: { title: '平台基本信息配置', icon: 'example', noCache: true }
+        meta: { title: '基本信息配置', icon: 'example', noCache: true }
+      },
+      {
+        path: 'adminuser',
+        component: () => import('@/views/yhadmin/adminuser'),
+        name: 'adminUser',
+        meta: { title: '管理员配置', icon: 'user', noCache: true }
       }
     ]
   },
@@ -205,7 +212,7 @@ export const constantRouterMap = [
         path: 'indexStyle',
         component: () => import('@/views/yhadmin/indexStyle'),
         name: 'indexStyle',
-        meta: { title: '首页风格', icon: 'component', noCache: true }
+        meta: { title: '首页风格', icon: 'theme', noCache: true }
       }
     ]
   },

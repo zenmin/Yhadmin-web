@@ -120,6 +120,9 @@
         <el-form-item label="购买人手机号">
           <span>{{ tempMsg.phone }}</span>
         </el-form-item>
+        <el-form-item label="购买人IP">
+          <span>{{ tempMsg.ip }}</span>
+        </el-form-item>
         <el-form-item label="购买到的卡密">
           <el-tag v-if="tempMsg.cardPwds.indexOf(',') == -1">{{ tempMsg.cardPwds }}</el-tag>
           <div v-else v-for="c in tempMsg.cardPwds.split(',')" :key="c">

@@ -5,7 +5,7 @@ export function loginByUsername(username, password) {
     // url: '/login/login',
     url: '/api/index/login',
     method: 'post',
-    data: ''
+    data: {username:username,password:password}
   })
 }
 
@@ -22,6 +22,13 @@ export function getUserInfo(token) {
     url: '/api/index/login',
     method: 'get',
     params: { token }
+  })
+}
+
+export function showError(msg) {
+  return this.$message({
+    type: 'error',
+    message: msg
   })
 }
 

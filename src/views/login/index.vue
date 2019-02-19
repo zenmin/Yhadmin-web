@@ -4,8 +4,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">{{ $t('login.title') }}</h3>
-        <lang-select class="set-language"/>
+        <h3 class="title">系统登录</h3>
       </div>
 
       <el-form-item prop="username">
@@ -14,7 +13,7 @@
         </span>
         <el-input
           v-model="loginForm.username"
-          :placeholder="$t('login.username')"
+          placeholder="用户名"
           name="username"
           type="text"
           auto-complete="on"
@@ -28,7 +27,7 @@
         <el-input
           :type="passwordType"
           v-model="loginForm.password"
-          :placeholder="$t('login.password')"
+          placeholder="密码"
           name="password"
           auto-complete="on"
           @keyup.enter.native="handleLogin" />
@@ -53,13 +52,12 @@
 </template>
 
 <script>
-import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
 import Cookies from 'js-cookie'
 
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
+  components: {  SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
@@ -118,6 +116,15 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
+            if(Cookies.get('token') === 'undefined'){
+                this.$message({
+                  type: 'error',
+                  message: Cookies.get('errorMsg')
+                })
+              Cookies.remove('token')
+              Cookies.remove('errorMsg')
+              return
+            }
             this.$router.push({ path: this.redirect || '/' })
             Cookies.set('language', 'zh')
           }).catch((e) => {

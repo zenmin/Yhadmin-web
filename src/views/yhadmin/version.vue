@@ -91,7 +91,7 @@
             </tr>
             <tr class="el-table__row">
               <td rowspan="1" colspan="1" class="el-table_1_column_2  ">
-                <div class="cell"><el-tag>服务器所在国家</el-tag></div>
+                <div class="cell"><el-tag>服务器语言</el-tag></div>
               </td>
               <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
                 <div class="cell">{{ temp.usercountry }}</div>
@@ -158,7 +158,7 @@
                 <div class="cell"><el-tag>服务器CPU类别</el-tag></div>
               </td>
               <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
-                <div class="cell">{{ temp.suncpuisalist }}</div>
+                <div class="cell">{{ temp.suncpuisalist === '' ? 'amd64' :  temp.suncpuisalist }}</div>
               </td>
             </tr>
             <tr class="el-table__row">
