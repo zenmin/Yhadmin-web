@@ -10,7 +10,6 @@
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加管理员</el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
       <el-alert :closable="true" type="info" title="超级管理员拥有对平台所有角色管理权限" show-icon />
     </div>
 
@@ -88,7 +87,7 @@
         </el-form-item>
         <el-form-item v-if="dialogStatus === 'update'" label="是否重置密码" prop="isResetPwd">
           <el-select v-model="temp.isResetPwd">
-            <el-option v-for="item in isLong" :key="item.id" :label="item.name" :value="item.value"/>
+            <el-option v-for="item in isOK" :key="item.value" :label="item.name" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status" >
@@ -176,7 +175,7 @@ export default {
           value: 0
         }
       ],
-      isLong: [
+      isOK: [
         {
           name: '是',
           value: 1
@@ -199,13 +198,14 @@ export default {
         isResetPwd: 0
       },
       resTemp: {
-        couponDesc: '',
-        couponNo: '',
-        disDate: undefined,
-        disDateField: '',
-        saleRate: 0,
         status: 1,
-        validLong: 1
+        userName: '',
+        passWord: '',
+        realName: '',
+        phone: '',
+        qq: '',
+        wx: '',
+        isResetPwd: 0
       },
       dialogFormVisible: false,
       imgDialogFormVisible: false,
@@ -330,10 +330,11 @@ export default {
     },
     handleUpdate(row) {
       this.showText = '查看图片'
+      row.isResetPwd = 0
       this.temp = Object.assign({}, row) // copy obj
+      console.log(this.temp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      this.temp.isResetPwd = 0
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })

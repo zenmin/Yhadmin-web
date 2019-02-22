@@ -11,11 +11,11 @@
       <el-form-item label="商户ID" prop="app_id">
         <el-input v-model="temp.app_id"></el-input>
       </el-form-item>
-      <el-form-item label="通信密钥" prop="app_key">
+      <el-form-item label="Token" prop="app_key">
         <el-input v-model="temp.app_key"></el-input>
         <br>
         <br>
-        <el-alert :closable="false" type="info" title="可到第三方支付商户控制台获取，以码支付为例：商户后台-系统设置 获取码支付ID和通讯密钥" show-icon style="width: 100%"/>
+        <el-alert :closable="false" type="info" title="可到第三方支付商户控制台获取，以码支付为例：商户后台-系统设置 获取码支付ID和Token" show-icon style="width: 100%"/>
       </el-form-item>
       <el-form-item label="" prop="">
         <el-button type="primary" @click="saveCardPwd">保存配置</el-button>

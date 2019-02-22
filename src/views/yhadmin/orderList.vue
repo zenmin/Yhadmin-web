@@ -2,8 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.orderNo" placeholder="订单编号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input v-model="listQuery.phone" placeholder="手机号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input v-model="listQuery.userContact"   placeholder="联系方式" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="listQuery.userContact"   placeholder="联系方式/QQ或手机号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-date-picker v-model="listQuery.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="起始时间" @keyup.enter.native="handleFilter"/>
       <el-date-picker v-model="listQuery.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" @keyup.enter.native="handleFilter"/>
       <el-select v-model="listQuery.goodsId"  placeholder="关联商品" clearable style="width: 120px;margin-top: 8px;" class="filter-item">
@@ -117,8 +116,8 @@
         <el-form-item label="购买人联系方式">
           <span>{{ tempMsg.userContact }}</span>
         </el-form-item>
-        <el-form-item label="购买人手机号">
-          <span>{{ tempMsg.phone }}</span>
+        <el-form-item label="购买人邮箱">
+          <span>{{ tempMsg.email }}</span>
         </el-form-item>
         <el-form-item label="购买人IP">
           <span>{{ tempMsg.ip }}</span>
@@ -327,8 +326,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['订单编号', '关联商品', '创建时间', '订单总价', '订单状态', '支付方式','购买商品数量','购买人手机号','购买人联系方式','购买到的卡密']
-        const filterVal = ['orderNo', 'goodsName', 'createDate', 'allPrice', 'status',"payWay",'num','phone','userContact','cardPwds']
+        const tHeader = ['订单编号', '关联商品', '创建时间', '订单总价', '订单状态', '支付方式','购买商品数量','购买人邮箱','购买人联系方式','购买到的卡密']
+        const filterVal = ['orderNo', 'goodsName', 'createDate', 'allPrice', 'status',"payWay",'num','email','userContact','cardPwds']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

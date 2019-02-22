@@ -24,6 +24,11 @@
           <el-tag>{{ scope.row.couponNo }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="类型" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.validLong === 1 ? '长期优惠券' : '一次性优惠券' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="描述" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.couponDesc }}</span>
@@ -94,13 +99,13 @@
             <el-option v-for="item in statusOptions" :key="item.value" :label="item.name" :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否长期有效" prop="validLong">
+        <el-form-item label="是否多次使用" prop="validLong">
           <el-select v-model="temp.validLong" class="filter-item" @change="checkOpts">
             <el-option v-for="item in isLong" :key="item.value" :label="item.name" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="失效时间" prop="disDate">
-          <el-date-picker v-model="temp.disDate" :disabled="temp.validLong === 1" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder=""/>
+          <el-date-picker v-model="temp.disDate" :disabled="temp.validLong === 0" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder=""/>
         </el-form-item>
         <el-form-item label="描述" prop="couponDesc">
           <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.couponDesc" type="textarea" />
@@ -360,7 +365,7 @@ export default {
           delete tempData.useDate
           delete tempData.useUser
           delete tempData.couponNo
-          this.temp.disDateField = this.temp.disDate
+          tempData.disDateField = tempData.disDate
           delete tempData.disDate
           if (!this.validateInput()) {
             return

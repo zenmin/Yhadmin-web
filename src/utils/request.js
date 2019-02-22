@@ -42,7 +42,6 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log(res)
     if (res.code !== 100) {
       Message({
         message: res.msg,
