@@ -3,11 +3,12 @@ import { Message } from 'element-ui'
 import qs from 'qs'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import router from '../router'
 
 // 请求地址根据环境不同请求的地址也会不同(这里修改而不更改config里面的是为了本地开发请求不同环境的后端API，而不用重新执行指令)
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api 的 base_url
+  // baseURL: process.env.BASE_API, // api 的 base_url
   timeout: 5000 // request timeout
 })
 
@@ -33,7 +34,7 @@ service.interceptors.request.use(
 
 // response interceptor
 service.interceptors.response.use(
-  response => response,
+  // response => response,
   /**
    * 下面的注释为通过在response里，自定义code来标示请求状态
    * 当code返回如下情况则说明权限有问题，登出并返回到登录页
@@ -42,16 +43,8 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code !== 100) {
-      Message({
-        message: res.msg,
-        type: 'error',
-        duration: 5 * 1000
-      })
-      return Promise.reject('error')
-    } else {
-      return response.data
-    }
+    if (res.code && res.code === 997) return router.push({ path: '/' })
+    return response
   },
   error => {
     console.log('err' + error) // for debug
