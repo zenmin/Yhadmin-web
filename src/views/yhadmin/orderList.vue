@@ -2,10 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.orderNo" placeholder="订单编号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-input v-model="listQuery.userContact"   placeholder="联系方式/QQ或手机号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input v-model="listQuery.userContact" placeholder="联系方式/QQ或手机号" style="width: 200px;margin-top: 8px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-date-picker v-model="listQuery.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="起始时间" @keyup.enter.native="handleFilter"/>
       <el-date-picker v-model="listQuery.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.goodsId"  placeholder="关联商品" clearable style="width: 120px;margin-top: 8px;" class="filter-item">
+      <el-select v-model="listQuery.goodsId" placeholder="关联商品" clearable style="width: 120px;margin-top: 8px;" class="filter-item">
         <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
       <el-select v-model="listQuery.status" placeholder="状态" clearable style="width: 90px;margin-top: 8px;" class="filter-item">
@@ -23,7 +23,7 @@
       fit
       highlight-current-row
       width="100%" >
-      <el-table-column label="订单编号" align="center">
+      <el-table-column label="订单编号" align="center" min-width="130">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.orderNo }}</el-tag>
         </template>
@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="是否使用优惠券" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.couponNo !== null &&  scope.row.couponNo !=='' "><el-tag style="color:#67C23A;">是</el-tag></span>
+          <span v-if="scope.row.couponNo !== null && scope.row.couponNo !=='' "><el-tag style="color:#67C23A;">是</el-tag></span>
           <span v-else ><el-tag style="color:#F67E7E;">否</el-tag></span>
         </template>
       </el-table-column>
@@ -78,7 +78,7 @@
 
     <pagination v-show="total>0" :total="total" :start.sync="listQuery.start" :size.sync="listQuery.size" @pagination="getList" />
 
-    <el-dialog title="订单详情" :visible.sync="dialogFormVisible">
+    <el-dialog :visible.sync="dialogFormVisible" title="订单详情">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item label="订单编号">
           <span>{{ tempMsg.orderNo }}</span>
@@ -123,11 +123,13 @@
           <span>{{ tempMsg.ip }}</span>
         </el-form-item>
         <el-form-item label="购买到的卡密">
-          <el-tag v-if="tempMsg.cardPwds.indexOf(',') == -1">{{ tempMsg.cardPwds }}</el-tag>
-          <div v-else v-for="c in tempMsg.cardPwds.split(',')" :key="c">
-            <el-tag >{{ c }}</el-tag>
-            <br>
-          </div>
+          <span v-if="tempMsg.cardPwds != null">
+            <el-tag v-if="tempMsg.cardPwds.indexOf(',') == -1">{{ tempMsg.cardPwds }}</el-tag>
+            <span v-for="c in tempMsg.cardPwds.split(',')" v-if="tempMsg.cardPwds.indexOf(',') !== -1" :key="c">
+              <el-tag >{{ c }}</el-tag>
+              <br>
+            </span>
+          </span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -139,7 +141,7 @@
 </template>
 
 <script>
-import { fetchList, getByCondition,getCouponByCondition } from '@/api/orders'
+import { fetchList, getByCondition, getCouponByCondition } from '@/api/orders'
 import { getAll } from '@/api/goods'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
@@ -279,16 +281,13 @@ export default {
         this.listLoading = false
       })
     },
-    handleDetail(data){
+    handleDetail(data) {
       this.tempMsg = data
       this.dialogFormVisible = true
-      if(data.couponNo !== '' && data.couponNo !== null){
+      if (data.couponNo !== '' && data.couponNo !== null) {
         console.log(data)
-        getCouponByCondition({couponNo:data.couponNo}).then(r=>{
-          if(r.data.data.content.length === 0)
-            this.saleRate = "该优惠券已被删除"
-          else
-            this.saleRate = '折扣'+ r.data.data.content[0].saleRate+'%'
+        getCouponByCondition({ couponNo: data.couponNo }).then(r => {
+          if (r.data.data.content.length === 0) { this.saleRate = '该优惠券已被删除' } else { this.saleRate = '折扣' + r.data.data.content[0].saleRate + '%' }
         })
       }
     },
@@ -326,8 +325,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['订单编号', '关联商品', '创建时间', '订单总价', '订单状态', '支付方式','购买商品数量','购买人邮箱','购买人联系方式','购买到的卡密']
-        const filterVal = ['orderNo', 'goodsName', 'createDate', 'allPrice', 'status',"payWay",'num','email','userContact','cardPwds']
+        const tHeader = ['订单编号', '关联商品', '创建时间', '订单总价', '订单状态', '支付方式', '购买商品数量', '购买人邮箱', '购买人联系方式', '购买到的卡密']
+        const filterVal = ['orderNo', 'goodsName', 'createDate', 'allPrice', 'status', 'payWay', 'num', 'email', 'userContact', 'cardPwds']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

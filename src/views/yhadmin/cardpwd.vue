@@ -20,7 +20,7 @@
       fit
       highlight-current-row
       width="100%" >
-      <el-table-column label="卡密编码" align="center">
+      <el-table-column label="卡密编码" align="center" min-width="150">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.cardNo }}</el-tag>
         </template>

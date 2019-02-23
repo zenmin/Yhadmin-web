@@ -19,7 +19,7 @@
       fit
       highlight-current-row
       width="100%" >
-      <el-table-column label="优惠券编码" align="center">
+      <el-table-column label="优惠券编码" align="center" min-width="130">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.couponNo }}</el-tag>
         </template>

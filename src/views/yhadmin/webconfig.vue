@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 60%">
       <el-form-item label="网站域名" prop="webUrl">
-        <el-input v-model="temp.webUrl"><template slot="prepend">http://</template></el-input>
+        <el-input v-model="temp.webUrl"><template slot="prepend">http://</template><template slot="append">有端口请加上端口</template></el-input>
       </el-form-item>
       <el-form-item label="网站主标题" >
         <el-input v-model="temp.mainTitle"/>
@@ -25,16 +25,17 @@
       <el-form-item label="底部版权" >
         <el-input v-model="temp.copyRight"/>
       </el-form-item>
-      <el-form-item label="网站LOGO">
-        <el-input v-model="temp.logo"/>
-      </el-form-item>
       <el-form-item label="首页背景图">
         <el-input v-model="temp.bgImg"/>
       </el-form-item>
       <el-form-item label="是否显示库存">
-      <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" >
-        <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
-      </el-select>
+        <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" >
+          <el-option v-for="item in categoryAll " :key="item.code" :label="item.name" :value="item.code" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="库存警戒值">
+        <el-input-number v-model="temp.kmNotice"/>
+        <el-alert :closable="false" type="info" title="库存低于警戒值时会发送邮件到超级管理员邮箱，0为不发送" show-icon />
       </el-form-item>
       <el-form-item label="网站状态">
         <el-select v-model="temp.webStatus" placeholder="" clearable style="width: 200px" class="filter-item" >
@@ -96,14 +97,14 @@ export default {
         copyRight: '',
         showStock: 1,
         wbeStyle: '',
-        logo: '',
         bgImg: '',
         webUrl: '',
-        webStatus: ''
+        webStatus: '',
+        kmNotice: 10
       },
       isDisabled: true,
       rules: {
-        webUrl: [{ required: true, message: '网站域名必填哦！', trigger: 'blur' }],
+        webUrl: [{ required: true, message: '网站域名必填哦！', trigger: 'blur' }]
       },
       allKms: 0,
       cid: ''
