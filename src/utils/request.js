@@ -8,7 +8,7 @@ import router from '../router'
 // 请求地址根据环境不同请求的地址也会不同(这里修改而不更改config里面的是为了本地开发请求不同环境的后端API，而不用重新执行指令)
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.BASE_API, // api 的 base_url
+  baseURL: process.env.BASE_API, // api 的 base_url
   timeout: 5000 // request timeout
 })
 
