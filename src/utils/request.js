@@ -43,7 +43,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code && res.code === 997) return router.push({ path: '/' })
+    if (res.code && res.code === 997) return router.push({ path: '/login' })
     return response
   },
   error => {
