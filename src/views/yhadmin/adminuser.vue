@@ -33,7 +33,7 @@
       </el-table-column>
       <el-table-column label="权限" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.isAdministrator === 1 ? '超级管理员' : '普通管理员'  }}</span>
+          <span>{{ scope.row.isAdministrator === 1 ? '超级管理员' : '普通管理员' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="上次登录时间" align="center">
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="手机号" align="center">
         <template slot-scope="scope">
-            <span>{{ scope.row.phone }}</span>
+          <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
       <el-table-column label="微信" align="center">
@@ -65,6 +65,11 @@
       <el-table-column label="QQ" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.wx }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="邮箱" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.adminEmail }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="150">
@@ -106,6 +111,9 @@
         </el-form-item>
         <el-form-item label="微信" prop="wx">
           <el-input v-model="temp.wx" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="wx">
+          <el-input v-model="temp.adminEmail" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -195,7 +203,8 @@ export default {
         phone: '',
         qq: '',
         wx: '',
-        isResetPwd: 0
+        isResetPwd: 0,
+        adminEmail: ''
       },
       resTemp: {
         status: 1,
@@ -205,7 +214,8 @@ export default {
         phone: '',
         qq: '',
         wx: '',
-        isResetPwd: 0
+        isResetPwd: 0,
+        adminEmail: ''
       },
       dialogFormVisible: false,
       imgDialogFormVisible: false,
@@ -309,7 +319,7 @@ export default {
         if (valid) {
           delete this.temp.createDate
           save(this.temp).then(r => {
-            if(r.data.code !== 100){
+            if (r.data.code !== 100) {
               this.$message({
                 type: 'error',
                 message: r.data.msg
@@ -348,8 +358,7 @@ export default {
           delete tempData.lastloginIP
           delete tempData.isAdministrator
           save(tempData).then(r => {
-
-            if(r.data.code !== 100){
+            if (r.data.code !== 100) {
               this.$message({
                 type: 'error',
                 message: r.data.msg
@@ -365,7 +374,7 @@ export default {
             }
             this.dialogFormVisible = false
             let msg = '更新成功'
-            if(this.temp.isResetPwd === 1){
+            if (this.temp.isResetPwd === 1) {
               msg = ' 更新成功，该管理员密码已重置为123456 '
             }
             this.$notify({

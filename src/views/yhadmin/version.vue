@@ -158,7 +158,7 @@
                 <div class="cell"><el-tag>服务器CPU类别</el-tag></div>
               </td>
               <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
-                <div class="cell">{{ temp.suncpuisalist === '' ? 'amd64' :  temp.suncpuisalist }}</div>
+                <div class="cell">{{ temp.suncpuisalist === '' ? 'amd64' : temp.suncpuisalist }}</div>
               </td>
             </tr>
             <tr class="el-table__row">
@@ -194,7 +194,7 @@
       </div>
       <br ><br >
 
-      <el-alert :closable="false" type="info" title="如果您想升级程序或需要技术援助，请点击此处！" show-icon >
+      <el-alert :closable="false" type="info" title="如果您需要升级程序、技术援助、定制开发，请点击此处！" show-icon >
         <el-tag style="margin-left: 40px;"><a :href="temp.updateurl" target="_blank" type="success">立即升级</a></el-tag>
       </el-alert>
 
