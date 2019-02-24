@@ -163,7 +163,7 @@ export const constantRouterMap = [
     path: '/config',
     component: Layout,
     redirect: '/config/#',
-    meta: { title: '平台配置', icon: 'component', noCache: true },
+    meta: { title: '平台信息配置', icon: 'component', noCache: true },
     children: [
       {
         path: 'index',
@@ -212,7 +212,7 @@ export const constantRouterMap = [
         path: 'indexStyle',
         component: () => import('@/views/yhadmin/indexStyle'),
         name: 'indexStyle',
-        meta: { title: '首页风格', icon: 'theme', noCache: true }
+        meta: { title: '首页模板', icon: 'theme', noCache: true }
       }
     ]
   },

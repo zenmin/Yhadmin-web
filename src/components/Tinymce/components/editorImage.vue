@@ -9,6 +9,7 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
+        :headers="submitToken"
         class="editor-slide-upload"
         action="/api/upload/image"
         list-type="picture-card">
@@ -21,7 +22,7 @@
 </template>
 
 <script>
-
+import { getToken } from '@/utils/auth'
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -34,8 +35,12 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      submitToken: { token: '' }
     }
+  },
+  created() {
+    this.submitToken.token = getToken()
   },
   methods: {
     checkAllSuccess() {
@@ -74,6 +79,13 @@ export default {
       }
     },
     beforeUpload(file) {
+      if (file.size > 5242880) {
+        this.$message({
+          type: 'error',
+          message: '只能上传5M以下的图片！'
+        })
+        return
+      }
       const _self = this
       const _URL = window.URL || window.webkitURL
       const fileName = file.uid

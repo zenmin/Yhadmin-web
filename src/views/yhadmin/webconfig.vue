@@ -26,7 +26,10 @@
         <el-input v-model="temp.copyRight"/>
       </el-form-item>
       <el-form-item label="首页背景图">
-        <el-input v-model="temp.bgImg"/>
+        <!--<el-input v-model="temp.bgImg"/>-->
+        <el-tag style="float: left;margin-top: 4px;"><a href="javascript:void(0)" style="color: #1e6abc" @click="showImg()">查看图片</a></el-tag>
+        <editorImage btn-text="关闭" color="#1890ff" class="editor-upload-btn" style="float: left;margin-left: 3px;" @successCBK="imageSuccessCBK"/>
+        <el-alert :closable="false" type="warning" title="首页背景图只可上传一张" show-icon />
       </el-form-item>
       <el-form-item label="是否显示库存">
         <el-select v-model="temp.showStock" placeholder="" clearable style="width: 200px" class="filter-item" >
@@ -41,12 +44,26 @@
         <el-select v-model="temp.webStatus" placeholder="" clearable style="width: 200px" class="filter-item" >
           <el-option v-for="item in categoryStatus " :key="item.code" :label="item.name" :value="item.code" />
         </el-select>
+        <el-alert :closable="false" type="info" title="关闭后发卡首页将重定向到http://baidu.com" show-icon />
       </el-form-item>
       <el-form-item label="" >
         <el-button @click="cancelForm">清空</el-button>
         <el-button type="primary" @click="save">保存配置</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog :visible.sync="imgDialogFormVisible" :close-on-press-escape="false" title="查看图片">
+      <el-row v-if="temp.bgImg !== ''">
+        <img :src="temp.bgImg" width="100%" height="50%">
+      </el-row>
+      <el-row v-if="temp.bgImg === ''">
+        <span>暂无图片</span>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button v-if="temp.bgImg !== ''" class="el-button--primary" @click="delBgimg">删除</el-button>
+        <el-button @click="imgDialogFormVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -54,12 +71,14 @@
 import { save, get } from '@/api/webconfig'
 import { parseTime } from '@/utils'
 import tinymce from '@/components/Tinymce'
+import editorImage from '@/components/Tinymce/components/editorImage'
 
 export default {
   filters: {
   },
   components: {
-    tinymce: tinymce
+    tinymce: tinymce,
+    editorImage: editorImage
   },
   data() {
     return {
@@ -86,6 +105,7 @@ export default {
           name: '关闭'
         }
       ],
+      imgDialogFormVisible: false,
       goodsAll: [],
       temp: {
         mainTitle: '',
@@ -139,6 +159,17 @@ export default {
     getConfig() {
       get().then(r => {
         this.temp = r.data.data
+      })
+    },
+    showImg() {
+      this.imgDialogFormVisible = true
+    },
+    imageSuccessCBK(data) {
+      if (data.length > 0) { this.temp.bgImg = data[0].url }
+    },
+    delBgimg() {
+      this.$confirm('确认删除首页背景图吗？').then(_ => {
+        this.temp.bgImg = ''
       })
     },
     formatJson(filterVal, jsonData) {

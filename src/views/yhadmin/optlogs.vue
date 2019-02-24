@@ -61,7 +61,7 @@
       <el-tag>请求参数</el-tag>
       <el-tag><a href="http://www.bejson.com/" target="_blank">格式化</a></el-tag>
       <br>
-      <span>{{ this.paramsTemp }}</span>
+      <span style="width: 600px; height: 100px; word-break: break-all;">{{ this.paramsTemp }}</span>
     </el-dialog>
 
   </div>
