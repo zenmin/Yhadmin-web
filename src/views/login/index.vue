@@ -98,6 +98,14 @@ export default {
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
+    let msg = Cookies.get('errorMsg')
+    if(msg !== 'undefined' && msg !== undefined){
+      this.$message({
+        type: 'error',
+        message: msg
+      })
+      Cookies.remove('errorMsg')
+    }
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -117,12 +125,7 @@ export default {
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
             if(Cookies.get('token') === 'undefined'){
-                this.$message({
-                  type: 'error',
-                  message: Cookies.get('errorMsg')
-                })
               Cookies.remove('token')
-              Cookies.remove('errorMsg')
               return
             }
             this.$router.push({ path: this.redirect || '/' })

@@ -359,9 +359,11 @@ export default {
           delete tempData.isAdministrator
           save(tempData).then(r => {
             if (r.data.code !== 100) {
-              this.$message({
+              this.$notify({
+                title: '失败',
+                message: r.data.msg,
                 type: 'error',
-                message: r.data.msg
+                duration: 4000
               })
               return
             }

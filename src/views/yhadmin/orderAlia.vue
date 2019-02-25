@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    此为高级版功能！
+    将在下个版本推出！
   </div>
 </template>
 

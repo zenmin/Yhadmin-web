@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import qs from 'qs'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getToken,removeToken,setError } from '@/utils/auth'
 import router from '../router'
 
 // 请求地址根据环境不同请求的地址也会不同(这里修改而不更改config里面的是为了本地开发请求不同环境的后端API，而不用重新执行指令)
@@ -43,7 +43,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code && res.code === 997) return router.push({ path: '/login' })
+    if (res.code && res.code === 997) {
+        removeToken()
+        setError(res.msg)
+        return router.push({ path: '/login' }
+      )}
     return response
   },
   error => {
