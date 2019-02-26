@@ -6,7 +6,7 @@
       <el-row>
         <el-col v-for="(o) in temp.temps" :span="4" :key="o.name" style="float: left;margin-left: 10px;">
           <el-card :body-style="{ padding: '0px' }">
-            <img :src="o.img" class="image">
+            <img :src="o.img" class="image" width="217px" height="282px">
             <div style="padding: 14px;">
               <span>{{ o.name }}</span>
               <el-button type="text" class="button" @click="saveCardPwd(o.path)">
