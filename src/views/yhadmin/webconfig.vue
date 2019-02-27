@@ -140,6 +140,12 @@ export default {
       }
     },
     save() {
+      if(this.temp.webUrl === '' || this.temp.webUrl === null){
+        this.$message({
+          type: 'error',
+          message: '网站域名必填哦！'
+        })
+      }
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           delete this.temp.createDate

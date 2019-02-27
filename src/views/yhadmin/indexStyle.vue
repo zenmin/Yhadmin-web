@@ -68,6 +68,13 @@ export default {
             getByCondition({ type: 5 }).then(r => {
               this.temp = r.data.data
             })
+          }else{
+            this.$notify({
+              title: '失败',
+              message: r.data.msg,
+              type: 'error',
+              duration: 4000
+            })
           }
         })
       })

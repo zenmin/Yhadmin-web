@@ -75,6 +75,13 @@ export default {
                 type: 'success',
                 duration: 4000
               })
+            }else{
+              this.$notify({
+                title: '失败',
+                message: r.data.msg,
+                type: 'error',
+                duration: 4000
+              })
             }
           })
         }
