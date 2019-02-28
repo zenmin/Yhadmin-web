@@ -98,14 +98,7 @@ export default {
   },
   created() {
     // window.addEventListener('hashchange', this.afterQRScan)
-    let msg = Cookies.get('errorMsg')
-    if(msg !== 'undefined' && msg !== undefined){
-      this.$message({
-        type: 'error',
-        message: msg
-      })
-      Cookies.remove('errorMsg')
-    }
+    this.showErr();
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
@@ -118,6 +111,16 @@ export default {
         this.passwordType = 'password'
       }
     },
+    showErr(){
+      let msg = Cookies.get('errorMsg')
+      if(msg !== 'undefined' && msg !== undefined){
+        this.$message({
+          type: 'error',
+          message: msg
+        })
+        Cookies.remove('errorMsg')
+      }
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -126,6 +129,7 @@ export default {
             this.loading = false
             if(Cookies.get('token') === 'undefined'){
               Cookies.remove('token')
+              this.showErr();
               return
             }
             this.$router.push({ path: this.redirect || '/' })

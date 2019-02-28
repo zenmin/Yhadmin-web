@@ -29,17 +29,37 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              {{ $t('navbar.dashboard') }}
-            </el-dropdown-item>
-          </router-link>
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            <span>你好 {{ Username }}</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <span style="display:block;text-align: center" @click="updatePwdDiag = true">修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided>
+            <span style="display:block;text-align: center" @click="logout">注销登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <el-dialog title="修改密码" :visible.sync="updatePwdDiag">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="原密码" prop="oldPwd">
+          <el-input v-model="temp.oldPwd"/>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPwd">
+          <el-input v-model="temp.newPwd"/>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="newPwd2">
+          <el-input v-model="temp.newPwd2"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -51,6 +71,8 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
+import { getUserName } from '@/utils/auth'
+import { updatePwd } from '@/api/adminuser'
 
 export default {
   components: {
@@ -69,9 +91,63 @@ export default {
       'device'
     ])
   },
+  data(){
+    return {
+      Username: '',
+      updatePwdDiag: false,
+      temp: {
+        oldPwd: '',
+        newPwd: '',
+        newPwd2: '',
+      },
+      rules: {
+        oldPwd: [{ required: true, message: '请填写必填项！', trigger: 'blur' }],
+        newPwd: [{ required: true, message: '请填写必填项！', trigger: 'blur' }],
+        newPwd2: [{ required: true, message: '请填写必填项！', trigger: 'blur' }]
+      }
+    }
+  },
+  created(){
+    this.Username = getUserName()
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          if(this.temp.newPwd !== this.temp.newPwd2){
+            this.$message({
+              type: 'error',
+              message: '两次密码输入不一致！'
+            })
+            return
+          }
+          updatePwd(this.temp).then(response => {
+            this.updatePwdDiag = false
+            if(response.data.data == true){
+              this.$message({
+                type: 'success',
+                message: '修改密码成功，请重新登录！'
+              })
+              const that = this
+              setTimeout(function() {
+                that.$store.dispatch('LogOut').then(() => {
+                  location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+                })
+              },1000)
+            }else{
+              this.$notify({
+                title: '失败',
+                message: response.data.msg,
+                type: 'error',
+                duration: 4000
+              })
+            }
+          })
+        }
+      })
     },
     logout() {
       this.$store.dispatch('LogOut').then(() => {

@@ -24,6 +24,14 @@ export function save(data) {
   })
 }
 
+export function updatePwd(data) {
+  return request({
+    url: '/api/admin/updatePwd',
+    method: 'post',
+    data: data
+  })
+}
+
 export function deleteById(id) {
   return request({
     url: '/api/admin/delete',

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { save, getByCondition } from '@/api/interface'
+import { saveTemp, getByCondition } from '@/api/interface'
 import { parseTime } from '@/utils'
 
 export default {
@@ -57,7 +57,7 @@ export default {
   methods: {
     saveCardPwd(path) {
       this.$confirm('是否使用此模板？').then(_ => {
-        save({ type: this.temp.type, index_style: path }).then(r => {
+        saveTemp({ type: this.temp.type, index_style: path }).then(r => {
           if (r.data.data) {
             this.$notify({
               title: '成功',

@@ -16,3 +16,10 @@ export function getByCondition(query) {
   })
 }
 
+export function saveTemp(query) {
+  return request({
+    url: '/api/interfaceConfig/saveTemplate',
+    method: 'post',
+    data: query
+  })
+}

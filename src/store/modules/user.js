@@ -1,5 +1,5 @@
 import { loginByUsername, logout, getUserInfo,showError } from '@/api/login'
-import { getToken, setToken, removeToken,setError } from '@/utils/auth'
+import { getToken, setToken, removeToken,setError,setUserName } from '@/utils/auth'
 
 const user = {
   state: {
@@ -53,6 +53,8 @@ const user = {
           if(data.code !== 100){
             setError(data.msg)
           }
+          setUserName(data.name)
+          console.log(data.name)
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
           resolve()

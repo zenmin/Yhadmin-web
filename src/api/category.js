@@ -3,8 +3,9 @@ import request from '@/utils/request'
 export default {
   getCategories() {
     return request({
-      url: '/api/category/getAll',
-      method: 'get'
+      url: '/api/category/getByCondition',
+      method: 'post',
+      data: { status: 1 }
     })
   }
 }
