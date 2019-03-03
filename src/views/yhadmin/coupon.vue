@@ -324,12 +324,12 @@ export default {
     createData: function() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          delete this.temp.createDate
-          this.temp.disDateField = this.temp.disDate
-          delete this.temp.disDate
           if (!this.validateInput()) {
             return
           }
+          delete this.temp.createDate
+          this.temp.disDateField = this.temp.disDate
+          delete this.temp.disDate
           save(this.temp).then(r => {
             this.temp.createDate = new Date()
             this.getList()
@@ -359,6 +359,9 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          if (!this.validateInput()) {
+            return
+          }
           const tempData = Object.assign({}, this.temp)
           delete tempData.createDate
           delete tempData.createUser
@@ -367,9 +370,6 @@ export default {
           delete tempData.couponNo
           tempData.disDateField = tempData.disDate
           delete tempData.disDate
-          if (!this.validateInput()) {
-            return
-          }
           save(tempData).then(() => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
@@ -397,9 +397,9 @@ export default {
         })
         return false
       }
-      if (this.temp.validLong === 0 && (this.temp.disDateField === null || this.temp.disDateField === '')) {
+      if (this.temp.validLong === 1 && (this.temp.disDate === null || this.temp.disDate === '' || this.temp.disDate === undefined)) {
         this.$message({
-          message: '非长期有效优惠券必须填写失效时间！',
+          message: '长期有效优惠券必须填写失效时间！',
           type: 'error'
         })
         return false
