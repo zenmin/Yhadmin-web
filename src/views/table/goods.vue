@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column label="添加时间" min-width="150px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.createDate | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="商品描述" min-width="150px" align="center">
@@ -51,7 +51,7 @@
           <el-tag v-if="scope.row.needPwd == true"> 是</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="提取密码" min-width="150px" align="center">
+      <el-table-column label="提取密码" min-width="150px" align="center" >
         <template slot-scope="scope">
           <span>{{ scope.row.pullPwd }}</span>
         </template>

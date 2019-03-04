@@ -30,7 +30,7 @@
                 <div class="cell"><el-tag>服务器时间</el-tag></div>
               </td>
               <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
-                <div class="cell">{{ temp.time }}</div>
+                <div class="cell">{{ new Date() | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</div>
               </td>
             </tr>
             <tr class="el-table__row">
@@ -205,6 +205,7 @@
 
 <script>
 import request from '@/utils/request'
+import { parseTime } from '@/utils'
 
 export default {
   filters: {
