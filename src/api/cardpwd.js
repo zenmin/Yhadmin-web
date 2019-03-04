@@ -31,10 +31,10 @@ export function deleteById(id) {
     data: id
   })
 }
-export function deleteBatch(type) {
+export function deleteBatch(data) {
   return request({
     url: '/api/card/deleteBatch',
     method: 'post',
-    data: type
+    data: data
   })
 }

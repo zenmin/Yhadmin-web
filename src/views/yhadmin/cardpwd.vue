@@ -2,7 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.cardNo" placeholder="卡密编码" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.goodsId" placeholder="关联商品" clearable style="width: 120px" class="filter-item">
+      <el-select v-model="listQuery.cid" placeholder="所属分类" clearable style="width: 150px" class="filter-item" @change="changeCate" >
+        <el-option v-for="item in categorys " :key="item.id" :label="item.name" :value="item.id"/>
+      </el-select>
+      <el-select v-model="listQuery.goodsId" placeholder="关联商品" clearable style="width: 150px" class="filter-item">
         <el-option v-for="item in categoryAll " :key="item.id" :label="item.name" :value="item.id"/>
       </el-select>
       <el-select v-model="listQuery.status" placeholder="状态" clearable style="width: 90px" class="filter-item">
@@ -10,6 +13,7 @@
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDelBatch">批量删除</el-button>
     </div>
 
     <el-table
@@ -18,8 +22,10 @@
       :data="list"
       border
       fit
+      ref="multipleTable"
       highlight-current-row
       width="100%" >
+      <el-table-column type="selection"  width="55"></el-table-column>
       <el-table-column label="卡密编码" align="center" min-width="150">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.cardNo }}</el-tag>
@@ -28,6 +34,11 @@
       <el-table-column label="商品名称" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.goodsName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="商品分类" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cname }}</span>
         </template>
       </el-table-column>
       <el-table-column label="添加时间" align="center">
@@ -90,8 +101,9 @@
 </template>
 
 <script>
-import { fetchList, getByCondition, save, deleteById } from '@/api/cardpwd'
-import { getAll } from '@/api/goods'
+import { fetchList, getByCondition, save, deleteById, deleteBatch } from '@/api/cardpwd'
+import goods from '@/api/goods'
+import getCategories from '@/api/category'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // 分页组件 Secondary package based on el-pagination
@@ -191,14 +203,14 @@ export default {
         name: [{ required: true, message: '名称不能为空哦！', trigger: 'blur' }],
         cid: [{ required: true, message: '必须选一个分类哦！', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      multipleSelection: [],
+      categorys: []
     }
   },
   created() {
     this.getList()
-    this.getCategories().then(r => {
-      this.categoryAll = r
-    })
+    this.getCate()
   },
   methods: {
     getList() {
@@ -256,11 +268,6 @@ export default {
             }
           })
         }).catch(reason => {})
-    },
-    getCategories() {
-      return getAll(null).then((r) => {
-        return r.data.data.content
-      })
     },
     checkOpts(data) {
       if (data) {
@@ -356,9 +363,48 @@ export default {
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: '分类列表'
+          filename: '卡密列表'
         })
         this.downloadLoading = false
+      })
+    },
+    handleDelBatch(){
+      this.$confirm("确定删除这一批卡密？").then(_ => {
+        var ids = '';
+        var selectd = this.$refs.multipleTable.selection;
+        selectd.forEach(i => {
+          ids += i.id + ",";
+        })
+        ids = ids.substring(0,ids.length - 1)
+        deleteBatch({ids:ids}).then(r => {
+          if(r.data.data){
+            this.$notify({
+              title: '成功',
+              message: '批量删除成功',
+              type: 'success',
+              duration: 4000
+            })
+            this.getList()
+          }else {
+            this.$notify({
+              title: '失败',
+              message: r.data.msg,
+              type: 'error',
+              duration: 4000
+            })
+          }
+        })
+      })
+    },
+    getCate(){
+      getCategories.getCategories().then(r => {
+        this.categorys = r.data.data
+      })
+    },
+    changeCate(cid){
+      this.listQuery.goodsId = ''
+      goods.goods({start:0,size:100,cid:cid}).then((r) => {
+        this.categoryAll = r.data.data.content
       })
     },
     formatJson(filterVal, jsonData) {

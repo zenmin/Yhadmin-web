@@ -91,8 +91,8 @@
         <el-form-item label="优惠券编码">
           <span>系统自动生成</span>
         </el-form-item>
-        <el-form-item label="折扣%" prop="saleRate">
-          <el-input-number v-model="temp.saleRate"/>
+        <el-form-item label="折扣 % " prop="saleRate">
+          <el-input-number v-model="temp.saleRate" />
         </el-form-item>
         <el-form-item label="状态" prop="status" >
           <el-select v-model="temp.status" class="filter-item" >
@@ -390,9 +390,10 @@ export default {
       })
     },
     validateInput() {
-      if (this.temp.saleRate <= 0 || this.temp.saleRate > 100) {
+      const sale = this.temp.saleRate;
+      if (sale <= 0 || sale > 100 || !/^[0-9]{1,2}$/.test(sale)) {
         this.$message({
-          message: '折扣必须在1~100之间！',
+          message: '折扣必须为整数且在1~100之间！',
           type: 'error'
         })
         return false

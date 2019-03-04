@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+export default {
+  goods(data) {
+    return request({
+      url: '/api/goods/getByCondition',
+      method: 'post',
+      data: data
+    })
+  }
+}
+
 export function fetchList(query) {
   return request({
     url: '/api/goods/getAll',
