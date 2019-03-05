@@ -64,7 +64,7 @@
       </el-table-column>
       <el-table-column label="QQ" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.wx }}</span>
+          <span>{{ scope.row.qq }}</span>
         </template>
       </el-table-column>
       <el-table-column label="邮箱" align="center">
