@@ -210,7 +210,7 @@ export default {
       'png'
     ]
     const tempImgFormat = allowImgFormat.indexOf(imgFormat) === -1 ? 'jpg' : imgFormat
-    const lang = language[langType] ? language[langType] : language['en']
+    const lang = language[langType] ? language[langType] : language['zh']
     const mime = mimes[tempImgFormat]
     // 规范图片格式
     that.imgFormat = tempImgFormat

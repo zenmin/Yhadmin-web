@@ -12,10 +12,6 @@
           <screenfull class="screenfull right-menu-item"/>
         </el-tooltip>
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="international right-menu-item"/>
-        </el-tooltip>
-
         <lang-select class="international right-menu-item"/>
 
         <el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">
@@ -68,7 +64,6 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
 import { getUserName } from '@/utils/auth'
@@ -79,7 +74,6 @@ export default {
     Breadcrumb,
     Hamburger,
     Screenfull,
-    SizeSelect,
     LangSelect,
     ThemePicker
   },

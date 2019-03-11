@@ -35,29 +35,16 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
     </el-form>
-
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
 
   </div>
 </template>
 
 <script>
-import SocialSign from './socialsignin'
 import Cookies from 'js-cookie'
-
 export default {
   name: 'Login',
-  components: {  SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
@@ -84,7 +71,6 @@ export default {
       },
       passwordType: 'password',
       loading: false,
-      showDialog: false,
       redirect: undefined
     }
   },

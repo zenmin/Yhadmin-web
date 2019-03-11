@@ -54,8 +54,8 @@ export default {
       tinymceId: this.id,
       fullscreen: false,
       languageTypeList: {
-        'en': 'en',
-        'zh': 'zh_CN'
+        'zh': 'zh_CN',
+        'en': 'en'
       }
     }
   },

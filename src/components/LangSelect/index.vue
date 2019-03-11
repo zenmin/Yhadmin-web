@@ -4,7 +4,7 @@
       <svg-icon class-name="international-icon" icon-class="language" />
     </div>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :disabled="language==='zh'" command="zh">中文</el-dropdown-item>
+      <el-dropdown-item :disabled="language==='zh'" command="zh" aria-selected="true">中文</el-dropdown-item>
       <el-dropdown-item :disabled="language==='en'" command="en">English</el-dropdown-item>
       <el-dropdown-item :disabled="language==='es'" command="es">Español</el-dropdown-item>
     </el-dropdown-menu>
@@ -23,7 +23,7 @@ export default {
       this.$i18n.locale = lang
       this.$store.dispatch('setLanguage', lang)
       this.$message({
-        message: 'Switch Language Success',
+        message: '切换语言成功',
         type: 'success'
       })
     }
