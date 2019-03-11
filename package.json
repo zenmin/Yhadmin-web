@@ -20,19 +20,12 @@
     ]
   },
   "keywords": [
-    "vue",
-    "element-ui",
-    "admin",
-    "management-system",
-    "admin-template"
+    "Yhadmin",
+    "自动发货",
+    "发卡",
+    "个人发卡",
+    "发卡平台"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PanJiaChen/vue-element-admin.git"
-  },
-  "bugs": {
-    "url": "https://github.com/PanJiaChen/vue-element-admin/issues"
-  },
   "dependencies": {
     "axios": "0.18.0",
     "clipboard": "1.7.1",

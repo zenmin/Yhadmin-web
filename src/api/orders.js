@@ -23,3 +23,11 @@ export function getCouponByCondition(query) {
     data: query
   })
 }
+
+export function getOrderAlia() {
+  return request({
+    url: '/api/orders/getcCensus',
+    method: 'post',
+    data: {}
+  })
+}

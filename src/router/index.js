@@ -138,7 +138,7 @@ export const constantRouterMap = [
         meta: { title: '订单列表', icon: 'list', noCache: true }
       },
       {
-        path: 'cardAddBatch',
+        path: 'orderAlia',
         component: () => import('@/views/yhadmin/orderAlia'),
         name: 'orderAlia',
         meta: { title: '订单分析', icon: 'chart', noCache: true }
@@ -259,17 +259,17 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/svg-icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/svg-icons/index'),
+        name: 'Icons',
+        meta: { title: 'icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]

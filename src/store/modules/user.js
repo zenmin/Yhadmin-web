@@ -54,7 +54,6 @@ const user = {
             setError(data.msg)
           }
           setUserName(data.name)
-          console.log(data.name)
           commit('SET_TOKEN', data.token)
           setToken(response.data.token)
           resolve()
