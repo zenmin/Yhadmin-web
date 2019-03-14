@@ -95,8 +95,6 @@
         </div>
       </el-col>
     </el-row>
-
-
     <chart height="100%" width="100%"/>
   </div>
 </template>

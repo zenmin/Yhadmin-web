@@ -120,7 +120,7 @@
           <editorImage :btn-text="showText" color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
         </el-form-item>
         <el-form-item label="商品描述" prop="goodsDesc">
-          <tinymce v-model="temp.goodsDesc" :showImg="0" />
+          <tinymce v-model="temp.goodsDesc" :showImg="'0'" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
